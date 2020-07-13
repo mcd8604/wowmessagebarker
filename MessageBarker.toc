@@ -1,0 +1,12 @@
+## Interface: 11305
+## Title: MessageBarker
+## Notes: Tool for storing sequences of chat messages and sending them to specified chat channels via configurable key bindings.
+## Author: Maurty
+## OptionalDeps: Ace3
+## Version: 0.1
+## SavedVariables: MessageBarkerDB
+## X-Curse-Project-ID: 
+
+Libs\embeds.xml
+MessageBarker.lua
+GUI.lua
