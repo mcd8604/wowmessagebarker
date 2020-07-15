@@ -1,0 +1,54 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd"> 
+ 	<Script file="MessageBarkerFrame.lua"/>
+	<Frame name="MessageBarkerFrame" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="UIParent" inherits="ButtonFrameTemplate" mixin="MessageBarkerFrameMixin"> 
+		<Size><AbsDimension x="600" y="600"/></Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Layers>
+			<Layer level="OVERLAY" textureSubLevel="-1">
+				<Texture parentKey="Icon" file="Interface\Garrison\Portraits\EnemyPortrait_802">
+					<Size x="60" y="60"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="-5" y="7"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<FontString parentKey="TitleText" inherits="GameFontNormal" text="Message Barker">
+					<Size x="0" y="16"/>
+					<Anchors>
+						<Anchor point="TOP" y="-3"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<ScrollFrame parentKey="MessageList" inherits="MessageListTemplate" enableMouseMotion="true">
+				<Size x="178" y="0"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="7" y="-67" />
+					<Anchor point="BOTTOMLEFT" x="7" y="28" />
+				</Anchors>
+			</ScrollFrame>
+			<Button parentKey="NewButton" inherits="UIPanelButtonTemplate" text="ADD">
+				<Size x="80" y="22"/>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" x="1.0" y="4.0" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						self:GetParent():AddNewMessage();
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+			<OnEvent method="OnEvent"/>
+			<OnUpdate method="OnUpdate"/>
+		</Scripts>
+	</Frame>
+</Ui>

@@ -8,5 +8,6 @@
 ## X-Curse-Project-ID: 
 
 Libs\embeds.xml
-MessageBarker.lua
-GUI.lua
+MessageRow.xml
+MessageList.xml
+MessageBarkerFrame.xml
