@@ -10,4 +10,5 @@
 Libs\embeds.xml
 MessageRow.xml
 MessageList.xml
+MessageEditor.xml
 MessageBarkerFrame.xml

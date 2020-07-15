@@ -24,11 +24,18 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<ScrollFrame parentKey="MessageList" inherits="MessageListTemplate" enableMouseMotion="true">
+			<ScrollFrame name="$parentMessageList" parentKey="MessageList" inherits="MessageListTemplate" enableMouseMotion="true">
 				<Size x="178" y="0"/>
 				<Anchors>
 					<Anchor point="TOPLEFT" x="7" y="-67" />
 					<Anchor point="BOTTOMLEFT" x="7" y="28" />
+				</Anchors>
+			</ScrollFrame>
+			<ScrollFrame parentKey="MessageEditor" inherits="MessageEditorTemplate" enableMouseMotion="true">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentMessageList" relativePoint="TOPRIGHT" />
+					<Anchor point="BOTTOMLEFT" relativeTo="$parentMessageList" relativePoint="BOTTOMRIGHT" />
+					<Anchor point="RIGHT" relativePoint="RIGHT" x="-24"/>
 				</Anchors>
 			</ScrollFrame>
 			<Button parentKey="NewButton" inherits="UIPanelButtonTemplate" text="ADD">

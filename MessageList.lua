@@ -1,10 +1,11 @@
 MessageListMixin = {};
 
 function MessageListMixin:OnLoad()
+	self.selectedRow = nil;
 	local ResetMessageRow = function(pool, messageRow)
 		messageRow:Reset();
 	end
-	self.messageRowPool = CreateFramePool("Button", self.Child, "MessageRowTemplate", ResetMessageRow);
+	self.messageRowPool = CreateFramePool("Frame", self.Child, "MessageRowTemplate", ResetMessageRow);
 	self.ScrollBar.Background:Hide();
 end
 
@@ -16,7 +17,10 @@ end
 function MessageListMixin:AddMessageRow(message)
 	local messageRow = self.messageRowPool:Acquire();
 	self:AnchorMessageRow(messageRow)
-	messageRow:Setup(message)
+	messageRow:Setup(message)	
+	messageRow.EditButton:SetScript("OnClick", function(editButton, event, ...)
+		MessageListMixin:SetSelectedRow(messageRow)
+	end)
 end
 
 function MessageListMixin:AnchorMessageRow(messageRow)
@@ -27,6 +31,22 @@ function MessageListMixin:AnchorMessageRow(messageRow)
 	end
 	self.previousMessageRow = messageRow;
 	table.insert(self.messageRows, messageRow);
+end
+
+function MessageListMixin:SetSelectedRow(messageRow)
+	if not self.IsSelectedRow(messageRow) then
+		if self.selectedRow ~= nil then
+			-- TODO remove highlight/selection
+		end
+		-- TODO set highlight/selection
+		-- TODO update MessageEditor
+		
+		self.selectedRow = messageRow
+	end
+end
+
+function MessageListMixin:IsSelectedRow(messageRow)
+	return self.selectedRow ~= nil and self.selectedRow == messageRow
 end
 
 function MessageListMixin:Update()
