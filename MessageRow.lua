@@ -16,7 +16,7 @@ function MessageRowMixin:Reset()
 	self:Enable();
 end
 
-function ChannelButtonHeaderMixin:Update()
+function MessageRowMixin:Update()
     self.Text:SetText(NORMAL_FONT_COLOR:WrapTextInColorCode(self:GetMessage()));
 	self:Show();
 end
