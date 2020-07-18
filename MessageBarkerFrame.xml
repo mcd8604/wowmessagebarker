@@ -31,13 +31,14 @@
 					<Anchor point="BOTTOMLEFT" x="7" y="28" />
 				</Anchors>
 			</ScrollFrame>
-			<ScrollFrame parentKey="MessageEditor" inherits="MessageEditorTemplate" enableMouseMotion="true">
+			<Frame parentKey="MessageEditor" inherits="MessageEditorTemplate" enableMouseMotion="true">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentMessageList" relativePoint="TOPRIGHT" />
-					<Anchor point="BOTTOMLEFT" relativeTo="$parentMessageList" relativePoint="BOTTOMRIGHT" />
-					<Anchor point="RIGHT" relativePoint="RIGHT" x="-24"/>
+					<Anchor point="TOP" relativeTo="$parentMessageList"/>
+					<Anchor point="LEFT" relativeTo="$parentMessageListScrollBar" relativePoint="RIGHT"/>
+					<Anchor point="BOTTOM" relativeTo="$parentMessageList"/>
+					<Anchor point="RIGHT" x="-7"/>
 				</Anchors>
-			</ScrollFrame>
+			</Frame>
 			<Button parentKey="NewButton" inherits="UIPanelButtonTemplate" text="ADD">
 				<Size x="80" y="22"/>
 				<Anchors>

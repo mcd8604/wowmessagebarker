@@ -1,8 +1,59 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Script file="MessageRow.lua"/>
-	<Frame name="MessageRowTemplate" mixin="MessageRowMixin" virtual="true">
+	<Button name="MessageRowTemplate" mixin="MessageRowMixin" virtual="true">
+		<Size x="298" y="34"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString inherits="GameFontNormal" parentKey="text" />
+				<Texture name="$parentBackground" parentKey="background">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="-1"/>
+						<Anchor point="BOTTOMRIGHT" x="0" y="1"/>
+					</Anchors>
+					<Color r="0" g="0.694" b="0.941" a="0.050"/>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString name="$parentName" inherits="FriendsFont_Normal" justifyH="LEFT" parentKey="name">
+					<Size x="226" y="12"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="20" y="-4"/>
+					</Anchors>
+					<Color r="0.510" g="0.773" b="1" />
+				</FontString>
+				<FontString name="$parentInfo" inherits="FriendsFont_Small" justifyH="LEFT" parentKey="info">
+					<Size x="260" y="10"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="BOTTOMLEFT" x="0" y="-3"/>
+					</Anchors>
+					<Color r="0.486" g="0.518" b="0.541" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self.highlight:SetVertexColor(0.243, 0.570, 1);
+				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+			</OnLoad>
+			<OnClick method="OnClick"/>
+		</Scripts>
+		<HighlightTexture file="Interface\QuestFrame\UI-QuestLogTitleHighlight" alphaMode="ADD" parentKey="highlight">
+			<Anchors>
+				<Anchor point="TOPLEFT" x="0" y="-1"/>
+				<Anchor point="BOTTOMRIGHT" x="0" y="1"/>
+			</Anchors>
+		</HighlightTexture>
+	</Button>
+<!-- 	<Frame name="MessageRowTemplate" mixin="MessageRowMixin" virtual="true">
 		<Size x="175" y="22"/>
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture parentKey="HighlightTexture" file="Interface\Buttons\UI-ListBox-Highlight" setAllPoints="true">
+					<Color r="1" g="1" b="1" a="0"/>
+				</Texture>
+			</Layer>
+		</Layers>
 		<Frames>
 			<Button parentKey="EditButton" inherits="UIPanelButtonTemplate" text="Edit">
 				<Size x="80" y="22"/>
@@ -11,5 +62,5 @@
 				</Anchors>
 			</Button>
 		</Frames>
-	</Frame>
+	</Frame> -->
 </Ui>

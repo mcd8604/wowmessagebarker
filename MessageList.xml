@@ -3,7 +3,7 @@
 	<Script file="MessageList.lua"/>
 	<ScrollFrame name="MessageListTemplate" mixin="MessageListMixin" inherits="UIPanelScrollFrameCodeTemplate" virtual="true">
 		<Frames>
-			<Slider parentKey="ScrollBar" inherits="UIPanelStretchableArtScrollBarTemplate">
+			<Slider name="$parentScrollBar" parentKey="ScrollBar" inherits="UIPanelStretchableArtScrollBarTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="0" y="-12"/>
 					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="0" y="16"/>

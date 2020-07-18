@@ -4,11 +4,16 @@ function MessageBarkerFrameMixin:OnLoad()
 	self:InitializeDB();
 	self:DrawMinimapIcon();
 	self:LoadDirtyFlags();
+	self.MessageList:AddSelectionListener(function(selectedIndex)
+		print("Selection Heard")
+		self:MarkDirty("UpdateAll");
+	end)
 end
 
 do
 	local dirtyFlags = {
 		UpdateMessageList = 1,
+		UpdateMessageEditor = 2,
 	};
 	function MessageBarkerFrameMixin:LoadDirtyFlags()
 		self.DirtyFlags = CreateFromMixins(DirtyFlagsMixin);
@@ -66,8 +71,12 @@ end
 function MessageBarkerFrameMixin:Update()
 	if self.DirtyFlags:IsDirty() then
 		if self.DirtyFlags:IsDirty(self.DirtyFlags.UpdateMessageList) then
+			print("MessageBarkerFrameMixin:Update")
 			--MessageListMixin:Update();
 			self:GetList():Update();
+		end
+		if self.DirtyFlags:IsDirty(self.DirtyFlags.UpdateMessageEditor) then
+			self.MessageEditor:Update()
 		end
 		self.DirtyFlags:MarkClean();
 	end
