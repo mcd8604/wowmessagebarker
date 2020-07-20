@@ -1,13 +1,15 @@
 MessageBarkerFrameMixin = {};
 
 function MessageBarkerFrameMixin:OnLoad()
+	print('BarkerFrame:OnLoad')
 	self:InitializeDB();
 	self:DrawMinimapIcon();
-	self:LoadDirtyFlags();
 	self.MessageList:AddSelectionListener(function(message)
 		self.MessageEditor:SetMessage(message)
-		self:MarkDirty("UpdateAll");
+		--self:MarkDirty("UpdateAll");
 	end)
+	self.MessageList:SetMessages(self:GetMessages());
+	self:LoadDirtyFlags();
 end
 
 do
@@ -67,7 +69,7 @@ end
 function MessageBarkerFrameMixin:Update()
 	if self.DirtyFlags:IsDirty() then
 		if self.DirtyFlags:IsDirty(self.DirtyFlags.UpdateMessageList) then
-			self.MessageList:Update(self:GetMessages());
+			self.MessageList:SetMessages(self:GetMessages());
 		end
 		--if self.DirtyFlags:IsDirty(self.DirtyFlags.UpdateMessageEditor) then
 		--	self.MessageEditor:Update();
@@ -83,7 +85,8 @@ function MessageBarkerFrameMixin:AddNewMessage()
 		outputs = {}
 	}
 	table.insert(MessageBarkerDB.factionrealm.messages, newMessage)
-	self:MarkDirty("UpdateAll");
+	self.MessageList:SetMessages(self:GetMessages());
+	--self:MarkDirty("UpdateAll");
 end
 
 -- Minimap icon

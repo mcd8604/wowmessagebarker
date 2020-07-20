@@ -3,6 +3,7 @@ selectionListeners = {}
 BUTTON_SPACING = 2
 
 function MessageListMixin:OnLoad()
+	print('List:OnLoad')
 	self.selectedRow = nil;
 	local ResetMessageRow = function(pool, messageRow)
 		messageRow:Reset();
@@ -12,22 +13,15 @@ function MessageListMixin:OnLoad()
 	self.ScrollBar.doNotHide = true;
 end
 
-function MessageListMixin:AddSelectionListener(listenerCallback)
-	local alreadyListening = false
-	for _, sL in ipairs(selectionListeners) do
-		alreadyListening = alreadyListening or sL == listenerCallback
+function MessageListMixin:SetMessages(messages)
+	print('List:SetMessages')
+	self.selectedRow = nil;
+	self.messageRowPool:ReleaseAll();
+	self:ResetMessageRowAnchors();
+	for _, message in ipairs(messages) do
+		self:AddMessageRow(message)
 	end
-	if not alreadyListening then
-		table.insert(selectionListeners, listenerCallback)
-	end
-end
-
-function MessageListMixin:NotifySelectionListeners(message)
-	if selectionListeners then
-		for _, listenerCallback in ipairs(selectionListeners) do
-			listenerCallback(message)
-		end
-	end
+	self:UpdateScrollBar();
 end
 
 function MessageListMixin:ResetMessageRowAnchors()
@@ -76,13 +70,28 @@ function MessageListMixin:IsSelectedRow(row)
 	return self.selectedRow ~= nil and self.selectedRow == row
 end
 
-function MessageListMixin:Update(messages)
-	self.messageRowPool:ReleaseAll();
-	self:ResetMessageRowAnchors();
-	for _, message in ipairs(messages) do
-		self:AddMessageRow(message)
+function MessageListMixin:AddSelectionListener(listenerCallback)
+	local alreadyListening = false
+	for _, sL in ipairs(selectionListeners) do
+		alreadyListening = alreadyListening or sL == listenerCallback
 	end
-	self:UpdateScrollBar();
+	if not alreadyListening then
+		table.insert(selectionListeners, listenerCallback)
+	end
+end
+
+function MessageListMixin:NotifySelectionListeners(message)
+	if selectionListeners then
+		for _, listenerCallback in ipairs(selectionListeners) do
+			listenerCallback(message)
+		end
+	end
+end
+
+function MessageListMixin:UpdateScrollBar()
+	self.Child:SetHeight(self:GetScrollFrameHeight());
+	--self.scrolling = frameHeight > self:GetHeight();
+	--self.ScrollBar:SetShown(self.scrolling);
 end
 
 function MessageListMixin:GetScrollFrameHeight()
@@ -92,10 +101,4 @@ function MessageListMixin:GetScrollFrameHeight()
 	end
 	local totalButtonSpacing = BUTTON_SPACING * (#self.messageRows - 1)
 	return totalButtonHeight + totalButtonSpacing
-end
-
-function MessageListMixin:UpdateScrollBar()
-	self.Child:SetHeight(self:GetScrollFrameHeight());
-	--self.scrolling = frameHeight > self:GetHeight();
-	--self.ScrollBar:SetShown(self.scrolling);
 end
