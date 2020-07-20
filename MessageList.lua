@@ -1,8 +1,9 @@
 MessageListMixin = {};
 selectionListeners = {}
+BUTTON_SPACING = 2
 
 function MessageListMixin:OnLoad()
-	self.selectedRowIndex = nil;
+	self.selectedRow = nil;
 	local ResetMessageRow = function(pool, messageRow)
 		messageRow:Reset();
 	end
@@ -12,7 +13,6 @@ function MessageListMixin:OnLoad()
 end
 
 function MessageListMixin:AddSelectionListener(listenerCallback)
-	print("MessageListMixin:AddSelectionListener")
 	local alreadyListening = false
 	for _, sL in ipairs(selectionListeners) do
 		alreadyListening = alreadyListening or sL == listenerCallback
@@ -22,11 +22,10 @@ function MessageListMixin:AddSelectionListener(listenerCallback)
 	end
 end
 
-function MessageListMixin:NotifySelectionListeners(selectedIndex)
-	print("MessageListMixin:NotifySelectionListeners")
+function MessageListMixin:NotifySelectionListeners(message)
 	if selectionListeners then
 		for _, listenerCallback in ipairs(selectionListeners) do
-			listenerCallback(selectedIndex)
+			listenerCallback(message)
 		end
 	end
 end
@@ -36,21 +35,21 @@ function MessageListMixin:ResetMessageRowAnchors()
 	self.messageRows = {};
 end
 
-function MessageListMixin:AddMessageRow(rowIndex, message)
+function MessageListMixin:AddMessageRow(message)
 	local messageRow = self.messageRowPool:Acquire();
 	self:AnchorMessageRow(messageRow)
 	messageRow:Setup(message)
-	if self.selectedRowIndex == rowIndex then
-		messageRow:LockHightlight()
+	if self.selectedRow and self.selectedRow.message == message then
+		messageRow:LockHighlight()
 	end
 	messageRow:SetScript("OnClick", function(editButton, event, ...)
-		MessageListMixin:SetSelectedRow(rowIndex, messageRow);
+		self:SetSelectedRow(messageRow);
 	end)
 end
 
 function MessageListMixin:AnchorMessageRow(messageRow)
 	if self.previousMessageRow then
-		messageRow:SetPoint("TOPLEFT", self.previousMessageRow, "BOTTOMLEFT", 0, -2);
+		messageRow:SetPoint("TOPLEFT", self.previousMessageRow, "BOTTOMLEFT", 0, -BUTTON_SPACING);
 	else
 		messageRow:SetPoint("TOPLEFT", self:GetScrollChild(), "TOPLEFT");
 	end
@@ -58,41 +57,45 @@ function MessageListMixin:AnchorMessageRow(messageRow)
 	table.insert(self.messageRows, messageRow);
 end
 
-function MessageListMixin:SetSelectedRow(rowIndex, messageRow)
-	if not self.IsSelectedRow(messageRow) then
-		if self.selectedRowIndex ~= nil then
-			-- TODO remove highlight/selection
+function MessageListMixin:SetSelectedRow(row)
+	if not self:IsSelectedRow(row) then
+		if self.selectedRow ~= nil then
+			self.selectedRow:SetHighlightAtlas("voicechat-channellist-row-highlight");
+			self.selectedRow:UnlockHighlight()
 		end
-		-- TODO set highlight/selection
-		-- messageRow.HighlightTexture:SetColorTexture(1, 1, 1, 0.6)
-		--messageRow:SetBackdropColor(0,1,1)
-		--messageRow:SetBackdropBorderColor(1,0,0)
-		-- TODO update MessageEditor
-		self.selectedRowIndex = rowIndex
-		MessageEditorMixin:SetMessage(messageRow.message)
-		self:NotifySelectionListeners(rowIndex)
+		self.selectedRow = row
+		if self.selectedRow then
+			self.selectedRow:SetHighlightAtlas("voicechat-channellist-row-selected");
+			self.selectedRow:LockHighlight()
+		end
+		self:NotifySelectionListeners(row.message)
 	end
 end
 
-function MessageListMixin:IsSelectedRow(messageRowIndex)
-	return self.selectedRowIndex ~= nil and self.selectedRowIndex == messageRowIndex
+function MessageListMixin:IsSelectedRow(row)
+	return self.selectedRow ~= nil and self.selectedRow == row
 end
 
-function MessageListMixin:Update()
-	print("MessageListMixin:Update")
+function MessageListMixin:Update(messages)
 	self.messageRowPool:ReleaseAll();
 	self:ResetMessageRowAnchors();
-	print("Selected Row: "..(self.selectedRowIndex or 'nil'))
-	local messages = MessageBarkerFrameMixin:GetMessages()
-	for i, message in ipairs(messages) do
-		self:AddMessageRow(i, message)
+	for _, message in ipairs(messages) do
+		self:AddMessageRow(message)
 	end
 	self:UpdateScrollBar();
 end
 
+function MessageListMixin:GetScrollFrameHeight()
+	local totalButtonHeight = 0
+	for _, messageRow in ipairs(self.messageRows) do
+		totalButtonHeight = totalButtonHeight + messageRow:GetHeight()
+	end
+	local totalButtonSpacing = BUTTON_SPACING * (#self.messageRows - 1)
+	return totalButtonHeight + totalButtonSpacing
+end
+
 function MessageListMixin:UpdateScrollBar()
-	local frameHeight = 10 * #self.messageRows
-	self.Child:SetHeight(frameHeight);
+	self.Child:SetHeight(self:GetScrollFrameHeight());
 	--self.scrolling = frameHeight > self:GetHeight();
 	--self.ScrollBar:SetShown(self.scrolling);
 end

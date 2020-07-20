@@ -33,17 +33,12 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				self.highlight:SetVertexColor(0.243, 0.570, 1);
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 			</OnLoad>
 			<OnClick method="OnClick"/>
 		</Scripts>
-		<HighlightTexture file="Interface\QuestFrame\UI-QuestLogTitleHighlight" alphaMode="ADD" parentKey="highlight">
-			<Anchors>
-				<Anchor point="TOPLEFT" x="0" y="-1"/>
-				<Anchor point="BOTTOMRIGHT" x="0" y="1"/>
-			</Anchors>
-		</HighlightTexture>
+		<NormalTexture parentKey="NormalTexture" atlas="voicechat-channellist-row-background" alphaMode="ADD"/>
+		<HighlightTexture parentKey="HighlightTexture" atlas="voicechat-channellist-row-highlight" alphaMode="ADD"/>
 	</Button>
 <!-- 	<Frame name="MessageRowTemplate" mixin="MessageRowMixin" virtual="true">
 		<Size x="175" y="22"/>

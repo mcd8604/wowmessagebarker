@@ -1,24 +1,14 @@
 MessageEditorMixin = CreateFromMixins(EventRegistrationHelper);
 
 function MessageEditorMixin:OnLoad()
-	print('MessageEditorMixin:OnLoad')
+	self:Hide()
 end
 
 function MessageEditorMixin:SetMessage(message)
 	self.currentMessage = message
-	print('MessageEditorMixin:SetMessage')
-end
-
-function MessageEditorMixin:OnUpdate()
-	self:Update()
-end
-
-function MessageEditorMixin:Update()
-	print(" MessageEditorMixin:Update")
-	print(self.currentMessage)
 	if self.currentMessage then
-		self.NameEditBox:SetText(self.currentMessage.name)
-		self.MessageEditBox:SetText(self.currentMessage.message)
+		self.NameEditBox:SetText(self.currentMessage.name or '')
+		self.MessageEditBox:SetText(self.currentMessage.message or '')
 		self:Show();
 	else 
 		self:Hide()

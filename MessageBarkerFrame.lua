@@ -1,11 +1,11 @@
-MessageBarkerFrameMixin = CreateFromMixins(EventRegistrationHelper);
+MessageBarkerFrameMixin = {};
 
 function MessageBarkerFrameMixin:OnLoad()
 	self:InitializeDB();
 	self:DrawMinimapIcon();
 	self:LoadDirtyFlags();
-	self.MessageList:AddSelectionListener(function(selectedIndex)
-		print("Selection Heard")
+	self.MessageList:AddSelectionListener(function(message)
+		self.MessageEditor:SetMessage(message)
 		self:MarkDirty("UpdateAll");
 	end)
 end
@@ -13,7 +13,7 @@ end
 do
 	local dirtyFlags = {
 		UpdateMessageList = 1,
-		UpdateMessageEditor = 2,
+		--UpdateMessageEditor = 2,
 	};
 	function MessageBarkerFrameMixin:LoadDirtyFlags()
 		self.DirtyFlags = CreateFromMixins(DirtyFlagsMixin);
@@ -60,10 +60,6 @@ function MessageBarkerFrameMixin:Toggle()
 	ToggleFrame(MessageBarkerFrame);
 end
 
-function MessageBarkerFrameMixin:GetList()
-	return self.MessageList;
-end
-
 function MessageBarkerFrameMixin:OnUpdate()
 	self:Update();
 end
@@ -71,13 +67,11 @@ end
 function MessageBarkerFrameMixin:Update()
 	if self.DirtyFlags:IsDirty() then
 		if self.DirtyFlags:IsDirty(self.DirtyFlags.UpdateMessageList) then
-			print("MessageBarkerFrameMixin:Update")
-			--MessageListMixin:Update();
-			self:GetList():Update();
+			self.MessageList:Update(self:GetMessages());
 		end
-		if self.DirtyFlags:IsDirty(self.DirtyFlags.UpdateMessageEditor) then
-			self.MessageEditor:Update()
-		end
+		--if self.DirtyFlags:IsDirty(self.DirtyFlags.UpdateMessageEditor) then
+		--	self.MessageEditor:Update();
+		--end
 		self.DirtyFlags:MarkClean();
 	end
 end
@@ -102,7 +96,7 @@ function MessageBarkerFrameMixin:DrawMinimapIcon()
 		OnClick = function(self, button) 
 			--if (button == "RightButton") then
 			--elseif (button == "MiddleButton") then
-			MessageBarkerFrameMixin:Toggle()
+			MessageBarkerFrame:Toggle();
 		end,
 		OnTooltipShow = function(tooltip)
 			tooltip:AddLine(format("%s", "Message Barker"));
