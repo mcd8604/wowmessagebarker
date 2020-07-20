@@ -14,11 +14,10 @@ function MessageListMixin:OnLoad()
 end
 
 function MessageListMixin:SetMessages(messages)
-	print('List:SetMessages')
 	self.selectedRow = nil;
 	self.messageRowPool:ReleaseAll();
 	self:ResetMessageRowAnchors();
-	for _, message in ipairs(messages) do
+	for _, message in pairs(messages) do
 		self:AddMessageRow(message)
 	end
 	self:UpdateScrollBar();

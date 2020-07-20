@@ -32,22 +32,33 @@ end
 
 function MessageBarkerFrameMixin:InitializeDB()
 	MessageBarkerDB = LibStub("AceDB-3.0"):New("MessageBarkerDB", {
-		factionrealm = {
-			messages = {},
-			sequences = {}
-		},
+		factionrealm = self:GetDefaultFactionRealmDB(),
 		char = {
 			minimapButton = {hide = false},
 		}
 	}, true)
 end
 
+function MessageBarkerFrameMixin:GetDefaultFactionRealmDB()
+	return {
+		messages = {},
+		sequences = {},
+		nextId = 1
+	}
+end
+
+-- Ensures the messages table is never nil
 function MessageBarkerFrameMixin:GetMessages()
-	local messages = {}
-	if MessageBarkerDB then
-		messages = MessageBarkerDB.factionrealm.messages or {}
+	if not MessageBarkerDB then
+		self.InitializeDB()
 	end
-	return messages
+	if not MessageBarkerDB.factionrealm then
+		MessageBarkerDB.factionrealm = self:GetDefaultFactionRealmDB()
+	end
+	if not MessageBarkerDB.factionrealm.messages then
+		MessageBarkerDB.factionrealm.messages = {}
+	end
+	return MessageBarkerDB.factionrealm.messages
 end
 
 function ItemSlotClicked(itemSlot)
@@ -79,14 +90,41 @@ function MessageBarkerFrameMixin:Update()
 end
 
 function MessageBarkerFrameMixin:AddNewMessage()
-	local newMessage = { 
+	local newMessage = {
+		id = self:GetNextMessageID(),
 		name = "Test Message",
 		text = "Message Text",
 		outputs = {}
 	}
-	table.insert(MessageBarkerDB.factionrealm.messages, newMessage)
-	self.MessageList:SetMessages(self:GetMessages());
+	local messages = self:GetMessages()
+	messages[newMessage.id] = newMessage
+	self.MessageList:SetMessages(messages);
 	--self:MarkDirty("UpdateAll");
+end
+
+-- NOTE: Doesn't account for number overflow, though is highly unlikely
+function MessageBarkerFrameMixin:GetNextMessageID()
+	if not MessageBarkerDB.factionrealm.nextId then
+		MessageBarkerDB.factionrealm.nextId = 1
+	end
+	local newId = MessageBarkerDB.factionrealm.nextId
+	-- make sure new Id is max in case the sequence was altered inappropriately
+	local maxId = self:GetMaxMessageID()
+	if newId <= maxId then
+		newId = maxId + 1
+	end
+	MessageBarkerDB.factionrealm.nextId = newId + 1
+	return newId
+end
+
+function MessageBarkerFrameMixin:GetMaxMessageID()
+	local maxId = -1
+	for id, message in pairs(self:GetMessages()) do
+		if id > maxId then
+			maxId = id
+		end
+	end
+	return maxId
 end
 
 -- Minimap icon
