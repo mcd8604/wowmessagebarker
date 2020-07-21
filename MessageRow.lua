@@ -18,6 +18,7 @@ end
 
 function MessageRowMixin:Reset()
 	self:ResetDisplay()
+	self:Hide();
 	self:SetHighlightAtlas("voicechat-channellist-row-highlight");	
 	self:UnlockHighlight()
 	self:Enable();

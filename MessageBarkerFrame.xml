@@ -39,7 +39,7 @@
 					<Anchor point="RIGHT" x="-7"/>
 				</Anchors>
 			</Frame>
-			<Button parentKey="NewButton" inherits="UIPanelButtonTemplate" text="ADD">
+			<Button name="$parentNewButton" parentKey="NewButton" inherits="UIPanelButtonTemplate" text="ADD">
 				<Size x="80" y="22"/>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" x="1.0" y="4.0" />
@@ -47,6 +47,17 @@
 				<Scripts>
 					<OnClick>
 						self:GetParent():AddNewMessage();
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="DeleteButton" inherits="UIPanelButtonTemplate" text="DELETE">
+				<Size x="80" y="22"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parentNewButton" relativePoint="RIGHT" x="2"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						self:GetParent():DeleteSelectedMessage();
 					</OnClick>
 				</Scripts>
 			</Button>

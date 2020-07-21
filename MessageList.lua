@@ -68,6 +68,15 @@ function MessageListMixin:IsSelectedRow(row)
 	return self.selectedRow ~= nil and self.selectedRow == row
 end
 
+function MessageListMixin:GetSelectedMessage()
+	local selectedMessage = nil
+	if self.selectedRow then
+		selectedMessage = self.selectedRow.message
+	end
+	return selectedMessage
+end
+
+-- TODO replace with CallbackRegistryBaseMixin
 function MessageListMixin:AddSelectionListener(listenerCallback)
 	local alreadyListening = false
 	for _, sL in ipairs(selectionListeners) do

@@ -116,6 +116,19 @@ function MessageBarkerFrameMixin:AddNewMessage()
 	--self:MarkDirty("UpdateAll");
 end
 
+function MessageBarkerFrameMixin:DeleteSelectedMessage()
+	local selectedMessage = self.MessageList:GetSelectedMessage()
+	self:DeleteMessage(selectedMessage)
+	self:MarkDirty("UpdateAll");
+end
+
+function MessageBarkerFrameMixin:DeleteMessage(message)
+	if message and message.id then
+		local messages = self:GetMessages()
+		messages[message.id] = nil
+	end
+end
+
 -- NOTE: Doesn't account for number overflow, though is highly unlikely
 function MessageBarkerFrameMixin:GetNextMessageID()
 	if not MessageBarkerDB.factionrealm.nextId then
