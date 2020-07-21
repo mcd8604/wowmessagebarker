@@ -1,12 +1,15 @@
 MessageBarkerFrameMixin = {};
 
 function MessageBarkerFrameMixin:OnLoad()
-	print('BarkerFrame:OnLoad')
 	self:InitializeDB();
 	self:DrawMinimapIcon();
 	self.MessageList:AddSelectionListener(function(message)
 		self.MessageEditor:SetMessage(message)
 		--self:MarkDirty("UpdateAll");
+	end)
+	self.MessageEditor:RegisterCallback(MessageEditorEvent.Saving, function(event, message)
+		self:SaveMessage(message)
+		self:MarkDirty("UpdateAll");
 	end)
 	self.MessageList:SetMessages(self:GetMessages());
 	self:LoadDirtyFlags();
@@ -48,7 +51,7 @@ function MessageBarkerFrameMixin:GetDefaultFactionRealmDB()
 end
 
 -- Ensures the messages table is never nil
-function MessageBarkerFrameMixin:GetMessages()
+function MessageBarkerFrameMixin:EnsureDB()
 	if not MessageBarkerDB then
 		self.InitializeDB()
 	end
@@ -58,7 +61,18 @@ function MessageBarkerFrameMixin:GetMessages()
 	if not MessageBarkerDB.factionrealm.messages then
 		MessageBarkerDB.factionrealm.messages = {}
 	end
+end
+
+function MessageBarkerFrameMixin:GetMessages()
+	self:EnsureDB()
 	return MessageBarkerDB.factionrealm.messages
+end
+
+function MessageBarkerFrameMixin:SaveMessage(message)
+	if message and message.id then
+		self:EnsureDB()
+		MessageBarkerDB.factionrealm.messages[message.id] = message
+	end
 end
 
 function ItemSlotClicked(itemSlot)

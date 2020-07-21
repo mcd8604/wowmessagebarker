@@ -10,14 +10,22 @@ function MessageRowMixin:Setup(message)
 		if self.message.message then
 			self.info:SetText(NORMAL_FONT_COLOR:WrapTextInColorCode(self.message.message));
 		end
+	else
+		self:ResetDisplay()
 	end
 	self:Show();
 end
 
 function MessageRowMixin:Reset()
-	self:SetHighlightAtlas("voicechat-channellist-row-highlight");
+	self:ResetDisplay()
+	self:SetHighlightAtlas("voicechat-channellist-row-highlight");	
 	self:UnlockHighlight()
 	self:Enable();
+end
+
+function MessageRowMixin:ResetDisplay()
+	self.name:SetText('');
+	self.info:SetText('');
 end
 
 function MessageRowMixin:OnClick()

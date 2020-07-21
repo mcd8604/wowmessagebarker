@@ -57,12 +57,14 @@
 					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
 				</Anchors>
 				<Scripts>
-					<OnClick method="SaveMessage"/>
+					<OnClick>
+						self:GetParent():SaveMessage()
+					</OnClick>
 				</Scripts>
 			</Button>
 		</Frames>
 		<Scripts>
-			<OnLoad method="OnLoad"/>
+			<OnLoad method="Load"/>
 			<OnUpdate method="OnUpdate"/>
 		</Scripts>
 	</Frame>

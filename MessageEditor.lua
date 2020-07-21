@@ -1,6 +1,10 @@
-MessageEditorMixin = CreateFromMixins(EventRegistrationHelper);
+MessageEditorMixin = CreateFromMixins(CallbackRegistryBaseMixin);
+MessageEditorEvent = {
+	Saving = 1,
+}
 
-function MessageEditorMixin:OnLoad()
+function MessageEditorMixin:Load()
+	self:OnLoad() -- for CallbackRegistryBaseMixin:OnLoad
 	self:Hide()
 end
 
@@ -16,5 +20,9 @@ function MessageEditorMixin:SetMessage(message)
 end
 
 function MessageEditorMixin:SaveMessage()
-	-- TODO copy data from UI into message and DB
+	if self.currentMessage then
+		self.currentMessage.name = self.NameEditBox:GetText()
+		self.currentMessage.message = self.MessageEditBox:GetText()
+		self:TriggerEvent(MessageEditorEvent.Saving, self.currentMessage)
+	end
 end

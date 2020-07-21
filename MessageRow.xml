@@ -25,7 +25,8 @@
 				<FontString name="$parentInfo" inherits="FriendsFont_Small" justifyH="LEFT" parentKey="info">
 					<Size x="260" y="10"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="BOTTOMLEFT" x="0" y="-3"/>
+						<!-- <Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="BOTTOMLEFT" x="0" y="-3"/> -->
+						<Anchor point="TOPLEFT" x="20" y="-19"/>
 					</Anchors>
 					<Color r="0.486" g="0.518" b="0.541" />
 				</FontString>

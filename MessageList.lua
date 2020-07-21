@@ -3,7 +3,6 @@ selectionListeners = {}
 BUTTON_SPACING = 2
 
 function MessageListMixin:OnLoad()
-	print('List:OnLoad')
 	self.selectedRow = nil;
 	local ResetMessageRow = function(pool, messageRow)
 		messageRow:Reset();
