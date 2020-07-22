@@ -3,7 +3,7 @@ MessageBarkerFrameMixin = {};
 function MessageBarkerFrameMixin:OnLoad()
 	self:InitializeDB();
 	self:DrawMinimapIcon();
-	self.MessageList:AddSelectionListener(function(message)
+	self.MessageList:RegisterCallback(MessageListEvent.RowSelected, function(event, message)
 		self.MessageEditor:SetMessage(message)
 		--self:MarkDirty("UpdateAll");
 	end)

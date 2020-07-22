@@ -19,7 +19,7 @@
 			</Frame>
 		</ScrollChild>
 		<Scripts>
-			<OnLoad method="OnLoad"/>
+			<OnLoad method="Load"/>
 		</Scripts>
 	</ScrollFrame>
 </Ui>

@@ -1,8 +1,11 @@
-MessageListMixin = {};
-selectionListeners = {}
+MessageListMixin = CreateFromMixins(CallbackRegistryBaseMixin);
+MessageListEvent = {
+	RowSelected = 1,
+}
 BUTTON_SPACING = 2
 
-function MessageListMixin:OnLoad()
+function MessageListMixin:Load()
+	self:OnLoad() -- for CallbackRegistryBaseMixin:OnLoad
 	self.selectedRow = nil;
 	local ResetMessageRow = function(pool, messageRow)
 		messageRow:Reset();
@@ -60,7 +63,7 @@ function MessageListMixin:SetSelectedRow(row)
 			self.selectedRow:SetHighlightAtlas("voicechat-channellist-row-selected");
 			self.selectedRow:LockHighlight()
 		end
-		self:NotifySelectionListeners(row.message)
+		self:TriggerEvent(MessageListEvent.RowSelected, row.message)
 	end
 end
 
@@ -74,25 +77,6 @@ function MessageListMixin:GetSelectedMessage()
 		selectedMessage = self.selectedRow.message
 	end
 	return selectedMessage
-end
-
--- TODO replace with CallbackRegistryBaseMixin
-function MessageListMixin:AddSelectionListener(listenerCallback)
-	local alreadyListening = false
-	for _, sL in ipairs(selectionListeners) do
-		alreadyListening = alreadyListening or sL == listenerCallback
-	end
-	if not alreadyListening then
-		table.insert(selectionListeners, listenerCallback)
-	end
-end
-
-function MessageListMixin:NotifySelectionListeners(message)
-	if selectionListeners then
-		for _, listenerCallback in ipairs(selectionListeners) do
-			listenerCallback(message)
-		end
-	end
 end
 
 function MessageListMixin:UpdateScrollBar()
