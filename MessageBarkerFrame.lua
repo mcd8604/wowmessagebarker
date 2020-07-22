@@ -68,6 +68,11 @@ function MessageBarkerFrameMixin:GetMessages()
 	return MessageBarkerDB.factionrealm.messages
 end
 
+function MessageBarkerFrameMixin:GetMessageById(messageId)
+	self:EnsureDB()
+	return MessageBarkerDB.factionrealm.messages[messageId]
+end
+
 function MessageBarkerFrameMixin:SaveMessage(message)
 	if message and message.id then
 		self:EnsureDB()
@@ -152,6 +157,15 @@ function MessageBarkerFrameMixin:GetMaxMessageID()
 		end
 	end
 	return maxId
+end
+
+function MessageBarkerFrameMixin:BarkMessage(messageId)
+	local message = self:GetMessageById(messageId)
+	if message and message.outputs then
+		for _, output in ipairs(message.outputs) do
+			SendChatMessage(message.message, output.chatType, nil, output.channelId)
+		end
+	end
 end
 
 -- Minimap icon
