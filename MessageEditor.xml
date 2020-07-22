@@ -51,6 +51,23 @@
 				</Anchors>
 				<Size x="100" y="100"/>
 			</EditBox>
+			<Frame parentKey="OutputSelectFrame">
+				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+					<EdgeSize>
+						<AbsValue val="16"/>
+					</EdgeSize>
+					<TileSize>
+						<AbsValue val="16"/>
+					</TileSize>
+					<BackgroundInsets>
+						<AbsInset left="5" right="5" top="5" bottom="5"/>
+					</BackgroundInsets>
+				</Backdrop>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentMessageEditBox" y="-26"/>
+					<Anchor point="RIGHT" relativePoint="RIGHT" />
+				</Anchors>
+			</Frame>
 			<Button parentKey="SaveButton" inherits="UIPanelButtonTemplate" text="Save">
 				<Size x="80" y="22"/>
 				<Anchors>
