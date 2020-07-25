@@ -38,6 +38,7 @@ function MessageBarkerFrameMixin:InitializeDB()
 		factionrealm = self:GetDefaultFactionRealmDB(),
 		char = {
 			minimapButton = {hide = false},
+			testOutputMode = false
 		}
 	}, true)
 end
@@ -70,7 +71,7 @@ end
 
 function MessageBarkerFrameMixin:GetMessageById(messageId)
 	self:EnsureDB()
-	return MessageBarkerDB.factionrealm.messages[messageId]
+	return MessageBarkerDB.factionrealm.messages[tonumber(messageId)]
 end
 
 function MessageBarkerFrameMixin:SaveMessage(message)
@@ -159,13 +160,35 @@ function MessageBarkerFrameMixin:GetMaxMessageID()
 	return maxId
 end
 
-function MessageBarkerFrameMixin:BarkMessage(messageId)
-	local message = self:GetMessageById(messageId)
-	if message and message.outputs then
-		for _, output in ipairs(message.outputs) do
-			SendChatMessage(message.message, output.chatType, nil, output.channelId)
+function MessageBarkerFrameMixin:TestMessageOutput(message, output)
+	local messageToPrint = nil
+	if output.channelId ~= nil then
+		messageToPrint = format("[%s(%i)]: %s", _G[output.chatType], output.channelId, message.message)
+	else 
+		messageToPrint = format("[%s]: %s", _G[output.chatType], message.message)
+	end
+	print(messageToPrint)
+end
+
+function MessageBarkerFrameMixin:BarkMessage(messageId, testOutput)
+	if messageId then
+		local message = self:GetMessageById(messageId)
+		if message and message.outputs then
+			for _, output in pairs(message.outputs) do
+				if testOutput then
+					self:TestMessageOutput(message, output)
+				else
+					SendChatMessage(message.message, output.chatType, nil, output.channelId)
+				end
+			end
 		end
 	end
+end
+
+-- Slash Commands
+SLASH_MESSAGEBARKER1, SLASH_MESSAGEBARKER2, SLASH_MESSAGEBARKER3 = "/bm", "/barkmsg", "/barkmessage"
+SlashCmdList.MESSAGEBARKER = function(msg, editBox)
+	MessageBarkerFrame:BarkMessage(msg, MessageBarkerDB.char.testOutputMode or false)
 end
 
 -- Minimap icon

@@ -30,12 +30,12 @@ end
 -- SendChatMessage(msg [, chatType, languageID, target])
 function MessageEditorMixin:GetDefaultChatOutputs()
 	return {
-		{ chatType = SAY },
-		{ chatType = YELL },
-		{ chatType = RAID },
-		{ chatType = RAID_WARNING },
-		{ chatType = INSTANCE_CHAT },
-		{ chatType = GUILD },
+		{ chatType = "SAY" },
+		{ chatType = "YELL" },
+		{ chatType = "RAID" },
+		{ chatType = "RAID_WARNING" },
+		{ chatType = "INSTANCE_CHAT" },
+		{ chatType = "GUILD" },
 	}
 end
 
@@ -57,7 +57,7 @@ function MessageEditorMixin:SetChatOutputSelectors()
 	local prevCheckBox = nil
 	for _, output in ipairs(self:GetDefaultChatOutputs()) do
 		local checkBox = self.outputSelectorPool:Acquire()
-		local checkBoxName = output.chatType
+		local checkBoxName = _G[output.chatType]
 		checkBox.Text:SetText(checkBoxName);
 		local checked = self:IndexOfMessageOutput(output) ~= nil
 		checkBox:SetChecked(checked)
