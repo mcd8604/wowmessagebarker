@@ -32,3 +32,7 @@ end
 function MessageRowMixin:OnClick()
 	print('click')
 end
+
+function MessageRowMixin:RunClicked()
+	MessageBarker:BarkMessage(self.message.id, true)
+end

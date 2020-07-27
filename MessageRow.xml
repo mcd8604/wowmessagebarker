@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
 	<Script file="MessageRow.lua"/>
 	<Button name="MessageRowTemplate" mixin="MessageRowMixin" virtual="true">
-		<Size x="298" y="34"/>
+		<Size x="175" y="34"/>
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString inherits="GameFontNormal" parentKey="text" />
@@ -32,6 +32,20 @@
 				</FontString>
 			</Layer>
 		</Layers>
+		<Frames>
+			<Button parentKey="RunButton" inherits="UIPanelButtonTemplate" text="Run">
+				<Size x="40" y="20"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT"/>
+					<Anchor point="BOTTOMRIGHT"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						self:GetParent():RunClicked()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
 		<Scripts>
 			<OnLoad>
 				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
