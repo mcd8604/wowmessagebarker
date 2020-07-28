@@ -8,13 +8,16 @@ end
 
 function MessageBarker:BarkMessage(messageId, testOutput)
 	if messageId then
+		if testOutput == nil then
+			testOutput = MessageBarkerDB.char.testOutputMode
+		end
 		local message = self:GetMessageById(messageId)
 		if message and message.outputs then
 			for _, output in pairs(message.outputs) do
 				if testOutput then
 					self:TestMessageOutput(message, output)
 				else
-					SendChatMessage(message.message, output.chatType, nil, output.channelId)
+					SendChatMessage(message.message, output.chatType, nil, self:LookupChannelID(output.channel) or 0)
 				end
 			end
 		end
@@ -23,12 +26,20 @@ end
 
 function MessageBarker:TestMessageOutput(message, output)
 	local messageToPrint = nil
-	if output.channelId ~= nil then
-		messageToPrint = format("[%s(%i)]: %s", _G[output.chatType], output.channelId, message.message)
+	if output.channel ~= nil then
+		messageToPrint = format("[%s(%i)]: %s", _G[output.chatType], self:LookupChannelID(output.channel), message.message)
 	else 
 		messageToPrint = format("[%s]: %s", _G[output.chatType], message.message)
 	end
 	print(messageToPrint)
+end
+
+function MessageBarker:LookupChannelID(channelName)
+	local id = 0
+	if channelName then
+		id, _, _ = GetChannelName(channelName)
+	end
+	return id
 end
 
 -- Ensures the messages table is never nil

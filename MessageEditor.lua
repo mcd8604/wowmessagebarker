@@ -30,23 +30,37 @@ end
 -- SendChatMessage(msg [, chatType, languageID, target])
 function MessageEditorMixin:GetDefaultChatOutputs()
 	return {
-		{ chatType = "SAY" },
-		{ chatType = "YELL" },
-		{ chatType = "RAID" },
-		{ chatType = "RAID_WARNING" },
-		{ chatType = "INSTANCE_CHAT" },
-		{ chatType = "GUILD" },
+		{ chatType = "SAY", 			display = SAY },
+		{ chatType = "YELL", 			display = YELL },
+		{ chatType = "RAID", 			display = RAID },
+		{ chatType = "RAID_WARNING", 	display = RAID_WARNING },
+		{ chatType = "INSTANCE_CHAT", 	display = INSTANCE_CHAT },
+		{ chatType = "GUILD", 			display = GUILD },
 	}
 end
 
-function MessageEditorMixin:GetCurrentChannelOutputs()
+function MessageEditorMixin:GetChannelOutputs()
+	-- Union the the player's currently joined channels with the message's existing channel outputs
+	local channelOutputs = self:ConvertChannelList(GetChannelList())
+	self:EnsureMessageOutputs()
+	for _, output in ipairs(self.currentMessage.outputs) do
+		if output.chatType == "CHANNEL" then
+			-- check if output exists in channelOutputs
+			if not self:IndexOfMessageOutput(channelOutputs, output) then
+				table.insert(channelOutputs, output)
+			end
+		end
+	end
+	return channelOutputs
+end
+
+function MessageEditorMixin:ConvertChannelList(...)
 	local channelOutputs = {}
-	local channelList = GetChannelList()
-	for i=1, select("#", channelList), 3 do
-		local channelID = select(i, channelList);
-		local channel = select(i+1, channelList);
-		local disabled = select(i+2, channelList);
-		table.insert(channelOutputs, { chatType = CHANNEL, target = channelID, channel = channel })
+	for i=1, select("#", ...), 3 do
+		--local channelID = select(i, ...);
+		local channel = select(i+1, ...);
+		--local disabled = select(i+2, ...);
+		table.insert(channelOutputs, { chatType = "CHANNEL", channel = channel })
 	end
 	return channelOutputs
 end
@@ -54,18 +68,28 @@ end
 function MessageEditorMixin:SetChatOutputSelectors()
 	self.outputSelectorPool:ReleaseAll()
 	self.outputSelectors = {}
+	self:AddOutputSelectorCheckboxes(self:GetDefaultChatOutputs(), 1)
+	self:AddOutputSelectorCheckboxes(self:GetChannelOutputs(), 2)
+end
+
+-- TODO refactor this - break down into named chunks/functions
+function MessageEditorMixin:AddOutputSelectorCheckboxes(outputs, columnNumber)
 	local prevCheckBox = nil
-	for _, output in ipairs(self:GetDefaultChatOutputs()) do
+	for _, output in ipairs(outputs) do
 		local checkBox = self.outputSelectorPool:Acquire()
-		local checkBoxName = _G[output.chatType]
+		local checkBoxName = output.display or output.channel
 		checkBox.Text:SetText(checkBoxName);
-		local checked = self:IndexOfMessageOutput(output) ~= nil
+		local checked = self:IndexOfMessageOutput(self.currentMessage.outputs, output) ~= nil
 		checkBox:SetChecked(checked)
 		checkBox.output = output
 		if prevCheckBox then
 			checkBox:SetPoint("TOPLEFT", prevCheckBox, "BOTTOMLEFT", 0, 0);
 		else
-			checkBox:SetPoint("TOPLEFT", self.OutputSelectFrame, "TOPLEFT", 4, -4);
+			local x = 4
+			if columnNumber > 1 then
+				x = 4 + self.OutputSelectFrame:GetWidth() / 2
+			end
+			checkBox:SetPoint("TOPLEFT", self.OutputSelectFrame, "TOPLEFT", x, -4);
 		end
 		checkBox:Show();
 		prevCheckBox = checkBox
@@ -74,24 +98,26 @@ function MessageEditorMixin:SetChatOutputSelectors()
 end
 
 function MessageEditorMixin:AddMessageOutput(output)
-	if not self:IndexOfMessageOutput(output) then
+	self:EnsureMessageOutputs()
+	if not self:IndexOfMessageOutput(self.currentMessage.outputs, output) then
 		table.insert(self.currentMessage.outputs, output)
 	end
 end
 
 function MessageEditorMixin:RemoveMessageOutput(output)
-	local index = self:IndexOfMessageOutput(output)
+	self:EnsureMessageOutputs()
+	local index = self:IndexOfMessageOutput(self.currentMessage.outputs, output)
 	if index then
 		self.currentMessage.outputs[index] = nil
 	end
 end
 
-function MessageEditorMixin:IndexOfMessageOutput(output)
+function MessageEditorMixin:IndexOfMessageOutput(outputs, output)
 	local index = nil
-	if self:EnsureMessageOutputs() and output then
-		index, _ = FindInTableIf(self.currentMessage.outputs, function(other) 
+	if output then
+		index, _ = FindInTableIf(outputs, function(other) 
 			return output.chatType == other.chatType and
-				(output.chatType ~= CHANNEL or (output.channel == other.channel))
+				(output.chatType ~= "CHANNEL" or (output.channel and output.channel == other.channel))
 		end)
 	end
 	return index

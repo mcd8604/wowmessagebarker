@@ -34,5 +34,5 @@ function MessageRowMixin:OnClick()
 end
 
 function MessageRowMixin:RunClicked()
-	MessageBarker:BarkMessage(self.message.id, true)
+	MessageBarker:BarkMessage(self.message.id)
 end
