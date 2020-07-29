@@ -1,4 +1,4 @@
-MessageEditorMixin = CreateFromMixins(CallbackRegistryBaseMixin);
+MessageEditorMixin = CreateFromMixins(CallbackRegistryBaseMixin, EventRegistrationHelper);
 MessageEditorEvent = {
 	Saving = 1,
 }
@@ -13,6 +13,7 @@ function MessageEditorMixin:Load()
 	end
 	self.outputSelectorPool = CreateFramePool("CheckButton", self.OutputSelectFrame, "ChatConfigCheckButtonTemplate", ResetCheckButton);
 	self.outputSelectors = {}
+	self:AddEvent("CHANNEL_UI_UPDATE")
 end
 
 function MessageEditorMixin:SetMessage(message)
@@ -147,4 +148,18 @@ function MessageEditorMixin:SaveMessage()
 		end
 		self:TriggerEvent(MessageEditorEvent.Saving, self.currentMessage)
 	end
+end
+
+function MessageEditorMixin:OnEvent(event, ...)
+	if event == "CHANNEL_UI_UPDATE" then
+		self:SetChatOutputSelectors()
+	end
+end
+
+function MessageEditorMixin:OnShow()
+	self:SetEventsRegistered(true);
+end
+
+function MessageEditorMixin:OnHide()
+	self:SetEventsRegistered(false);
 end
