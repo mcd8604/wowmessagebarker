@@ -93,6 +93,13 @@ function MessageEditorMixin:AddOutputSelectorCheckboxes(outputs, columnNumber)
 			checkBox:SetPoint("TOPLEFT", self.OutputSelectFrame, "TOPLEFT", x, -4);
 		end
 		checkBox:Show();
+		checkBox:SetScript("OnClick", function(...) 
+			if checkBox:GetChecked() then
+				self:AddMessageOutput(checkBox.output)
+			else
+				self:RemoveMessageOutput(checkBox.output)
+			end
+		end)
 		prevCheckBox = checkBox
 		table.insert(self.outputSelectors, checkBox)
 	end
@@ -139,13 +146,6 @@ function MessageEditorMixin:SaveMessage()
 	if self.currentMessage then
 		self.currentMessage.name = self.NameEditBox:GetText()
 		self.currentMessage.message = self.MessageEditBox:GetText()
-		for i, outputSelector in ipairs(self.outputSelectors) do
-			if outputSelector:GetChecked() then
-				self:AddMessageOutput(outputSelector.output)
-			else
-				self:RemoveMessageOutput(outputSelector.output)
-			end
-		end
 		self:TriggerEvent(MessageEditorEvent.Saving, self.currentMessage)
 	end
 end

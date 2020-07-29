@@ -51,6 +51,17 @@
 				</Anchors>
 				<Size x="100" y="100"/>
 			</EditBox>
+			<Button parentKey="SaveButton" inherits="UIPanelButtonTemplate" text="Save">
+				<Size x="80" y="22"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentMessageEditBox"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						self:GetParent():SaveMessage()
+					</OnClick>
+				</Scripts>
+			</Button>
 			<Frame parentKey="OutputSelectFrame">
 				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
 					<EdgeSize>
@@ -68,17 +79,6 @@
 					<Anchor point="RIGHT" relativePoint="RIGHT" />
 				</Anchors>
 			</Frame>
-			<Button parentKey="SaveButton" inherits="UIPanelButtonTemplate" text="Save">
-				<Size x="80" y="22"/>
-				<Anchors>
-					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						self:GetParent():SaveMessage()
-					</OnClick>
-				</Scripts>
-			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad method="Load"/>
