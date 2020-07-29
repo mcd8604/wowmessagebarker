@@ -142,6 +142,14 @@ function MessageEditorMixin:EnsureMessageOutputs()
 	return ensured
 end
 
+function MessageEditorMixin:CancelMessageEdit()
+	local text = ''
+	if self.currentMessage then
+		text = self.currentMessage.message or ''
+	end
+	self.MessageEditBox:SetText(text)
+end
+
 function MessageEditorMixin:SaveMessage()
 	if self.currentMessage then
 		self.currentMessage.name = self.NameEditBox:GetText()

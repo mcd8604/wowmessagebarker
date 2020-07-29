@@ -51,10 +51,21 @@
 				</Anchors>
 				<Size x="100" y="100"/>
 			</EditBox>
+			<Button name="$parentCancelButton" parentKey="CancelButton" inherits="UIPanelButtonTemplate" text="Cancel">
+				<Size x="80" y="22"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentMessageEditBox" y="-4"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						self:GetParent():CancelMessageEdit()
+					</OnClick>
+				</Scripts>
+			</Button>
 			<Button parentKey="SaveButton" inherits="UIPanelButtonTemplate" text="Save">
 				<Size x="80" y="22"/>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentMessageEditBox"/>
+					<Anchor point="RIGHT" relativePoint="LEFT" relativeTo="$parentCancelButton"/>
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -75,8 +86,8 @@
 					</BackgroundInsets>
 				</Backdrop>
 				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentMessageEditBox" y="-26"/>
-					<Anchor point="RIGHT" relativePoint="RIGHT" />
+					<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentCancelButton" y="-4"/>
+					<Anchor point="LEFT" relativePoint="LEFT" />
 				</Anchors>
 			</Frame>
 		</Frames>
