@@ -8,6 +8,7 @@
 ## X-Curse-Project-ID: 
 
 Libs\embeds.xml
+MessageFactory.lua
 MessageBarker.lua
 MessageRow.xml
 MessageList.xml

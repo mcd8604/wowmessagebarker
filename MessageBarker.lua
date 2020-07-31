@@ -1,4 +1,4 @@
-MessageBarker = CreateFromMixins(CallbackRegistryBaseMixin);
+MessageBarker = CreateFromMixins(CallbackRegistryBaseMixin, MessageFactory);
 MessageBarkerEvent = {
 	MessageAdded = 1,
 	MessageDeleted = 2,
@@ -10,11 +10,6 @@ SlashCmdList.MESSAGEBARKER = function(msg, editBox)
 	MessageBarker:BarkMessage(msg, MessageBarkerDB.char.testOutputMode or false)
 end
 
-MessageBarker_MessageTypes = {
-	Basic = 1,
-	Sale = 2,
-}
-
 function MessageBarker:Load()
 	self:OnLoad() -- for CallbackRegistryBaseMixin:OnLoad
 	MessageBarkerDB = LibStub("AceDB-3.0"):New("MessageBarkerDB", {
@@ -24,6 +19,13 @@ function MessageBarker:Load()
 			testOutputMode = false
 		}
 	}, true)
+end
+
+do
+	local messageTypes = tInvert(MessageBarker_MessageTypes)
+	function MessageBarker:GetMessageTypeString(messageType)
+		return messageTypes[messageType] or 'Unknown Message Type'
+	end
 end
 
 function MessageBarker:BarkMessage(messageId, testOutput)
@@ -133,14 +135,12 @@ function MessageBarker:GetMaxMessageID()
 	return maxId
 end
 
-function MessageBarker:AddNewMessage(messageType)
-	local newMessage = {
-		id = MessageBarker:GetNextMessageID(),
-		name = "Test Message",
-		type = messageType,
-		outputs = {}
-	}
+function MessageBarker:AddNewMessage(message)
+	assert(message, "Tried to add a nil message")
 	local messages = MessageBarker:GetMessages()
-	messages[newMessage.id] = newMessage
-	self:TriggerEvent(MessageBarkerEvent.MessageAdded, newMessage)
+	-- prevent adding an existing message
+	if not tContains(messages, message) then
+		messages[message.id] = message
+		self:TriggerEvent(MessageBarkerEvent.MessageAdded, message)
+	end
 end

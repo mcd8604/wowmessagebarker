@@ -22,28 +22,10 @@
 			<OnLoad method="OnLoad"/>
 		</Scripts>
 	</ScrollFrame> -->
-	<Frame name="MessageEditorTemplate" mixin="MessageEditorMixin" virtual="true">
-		<Layers>
-			<Layer level="BORDER">
-				<FontString inherits="GameFontHighlightSmall" text="Name:">
-					<Anchors>
-						<Anchor point="TOPLEFT" x="7" y="-11"/>
-					</Anchors>
-				</FontString>
-				<FontString inherits="GameFontHighlightSmall" text="Message:">
-					<Anchors>
-						<Anchor point="TOPLEFT" x="7" y="-55"/>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
+	<Frame name="MessageTypeTemplate" virtual="true">
+	</Frame>
+	<Frame name="BasicMessageTypeTemplate" inherits="MessageTypeTemplate" virtual="true">
 		<Frames>
-			<EditBox name="$parentNameEditBox" parentKey="NameEditBox" inherits="InputBoxTemplate" autoFocus="false">
-				<Anchors>
-					<Anchor point="TOPLEFT" x="7" y="-22"/>
-				</Anchors>
-				<Size x="175" y="22"/>
-			</EditBox>
 			<EditBox name="$parentMessageEditBox" parentKey="MessageEditBox" multiLine="true" inherits="InputBoxTemplate" autoFocus="false">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentNameEditBox" y="-26"/>
@@ -51,10 +33,66 @@
 				</Anchors>
 				<Size x="100" y="100"/>
 			</EditBox>
+		</Frames>
+	</Frame>
+	<Frame name="SaleMessageTypeTemplate" inherits="MessageTypeTemplate" virtual="true">		
+		<Layers>
+			<Layer level="BORDER">
+				<FontString name="$parentPriceFontString" inherits="GameFontNormalLeft" text="Price:">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="7" y="-11"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox name="$parentPriceEditBox" parentKey="PriceEditBox" inherits="InputBoxTemplate" autoFocus="false">
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" />
+				</Anchors>
+				<Size x="100" y="22"/>
+			</EditBox>
+		</Frames>
+	</Frame>
+	<Frame name="MessageEditorTemplate" mixin="MessageEditorMixin" virtual="true">
+		<Layers>
+			<Layer level="BORDER">
+				<FontString name="$parentNameFontString" parentKey="NameFontString" inherits="GameFontNormalLeft" text="Name:">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="7" y="-11"/>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentMessageTypeFontStringHeader" parentKey="MessageTypeFontStringHeader" inherits="GameFontNormalLeft" text="Message Type:">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parentNameFontString" y="-22"/>
+						<!-- <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentNameEditBox"/> -->
+					</Anchors>
+				</FontString>
+				<FontString name="$parentMessageTypeFontStringValue" parentKey="MessageTypeFontStringValue" inherits="GameFontHighlightLeft">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentMessageTypeFontStringHeader"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox name="$parentNameEditBox" parentKey="NameEditBox" inherits="InputBoxTemplate" autoFocus="false">
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentNameFontString" x="7"/>
+				</Anchors>
+				<Size x="175" y="22"/>
+			</EditBox>
+			<Frame name="$parentMessageContentFrame" parentKey="MessageContentFrame">
+				<Size x="0" y="22"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentMessageTypeFontStringHeader"/>
+					<Anchor point="RIGHT" relativePoint="RIGHT" />
+				</Anchors>
+			</Frame>
 			<Button name="$parentCancelButton" parentKey="CancelButton" inherits="UIPanelButtonTemplate" text="Cancel">
 				<Size x="80" y="22"/>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentMessageEditBox" y="-4"/>
+					<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentMessageContentFrame" y="-4"/>
 				</Anchors>
 				<Scripts>
 					<OnClick>

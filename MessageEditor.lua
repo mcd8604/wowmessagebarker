@@ -20,12 +20,21 @@ function MessageEditorMixin:SetMessage(message)
 	self.currentMessage = message
 	if self.currentMessage then
 		self.NameEditBox:SetText(self.currentMessage.name or '')
-		self.MessageEditBox:SetText(self.currentMessage.message or '')
+		--self.MessageEditBox:SetText(self.currentMessage.message or '')
+		self.currentMessageTypeString = MessageBarker:GetMessageTypeString(self.currentMessage.type)
+		self.MessageTypeFontStringValue:SetText(self.currentMessageTypeString)
+		self:LoadMessageContentFrame()
 		self:SetChatOutputSelectors()
 		self:Show();
 	else 
 		self:Hide()
 	end
+end
+
+-- NOTE: Message type templates should following the naming convention: "<MessageType>MessageTypeTemplate"
+function MessageEditorMixin:LoadMessageContentFrame()
+	local templateName = self.currentMessageTypeString.."MessageTypeTemplate"
+	-- TODO create frame from template
 end
 
 -- SendChatMessage(msg [, chatType, languageID, target])
@@ -147,13 +156,13 @@ function MessageEditorMixin:CancelMessageEdit()
 	if self.currentMessage then
 		text = self.currentMessage.message or ''
 	end
-	self.MessageEditBox:SetText(text)
+	--self.MessageEditBox:SetText(text)
 end
 
 function MessageEditorMixin:SaveMessage()
 	if self.currentMessage then
 		self.currentMessage.name = self.NameEditBox:GetText()
-		self.currentMessage.message = self.MessageEditBox:GetText()
+		--self.currentMessage.message = self.MessageEditBox:GetText()
 		self:TriggerEvent(MessageEditorEvent.Saving, self.currentMessage)
 	end
 end

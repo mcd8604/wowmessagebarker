@@ -63,7 +63,7 @@ function MessageBarkerFrameMixin:AddButtonClicked(mouseButton)
 	if mouseButton == "RightButton" then
 		self:ShowMessageTypeDropDown()
 	else
-		self:AddNewMessage();
+		self:AddNewMessage()
 	end
 end
  
@@ -89,7 +89,7 @@ function MessageBarkerFrame_AppendCreateMessageDropDownInfo()
 		info.text = messageType
 		info.value = i
 		info.notCheckable = 1;
-		info.func = function() MessageBarker:AddNewMessage(i) end
+		info.func = function() MessageBarker:AddNewMessage(MessageBarker:CreateMessageByType(i)) end
 		UIDropDownMenu_AddButton(info)
 	end
 end
@@ -103,22 +103,16 @@ function MessageBarkerFrame_AppendCancelDropDownInfo()
 	UIDropDownMenu_AddButton(info);
 end
 
-function MessageBarkerFrameMixin:AddNewMessage(messageType)
-	--local objtype, _, itemlink = GetCursorInfo()
-	--ClearCursor()
-	--if objtype == "item" then
-	--   print(itemlink) 
-	--end
-	local newMessage = {
-		id = MessageBarker:GetNextMessageID(),
-		name = "Test Message",
-		type = messageType,
-		outputs = {}
-	}
-	local messages = MessageBarker:GetMessages()
-	messages[newMessage.id] = newMessage
-	self.MessageList:SetMessages(messages);
-	--self:MarkDirty("UpdateAll");
+function MessageBarkerFrameMixin:AddNewMessage()
+	local objectType, itemId, itemLink = GetCursorInfo()
+	ClearCursor()
+	local newMessage;
+	if objectType == "item" then
+		newMessage = MessageBarker:CreateMessage_Sale(itemId, itemLink)
+	else
+		newMessage = MessageBarker:CreateMessage_Basic()
+	end
+	MessageBarker:AddNewMessage(newMessage)
 end
 
 function MessageBarkerFrameMixin:DeleteSelectedMessage()
