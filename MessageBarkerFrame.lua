@@ -1,8 +1,14 @@
 MessageBarkerFrameMixin = {};
 
 function MessageBarkerFrameMixin:OnLoad()
-	MessageBarker:InitializeDB();
+	MessageBarker:Load();
 	self:DrawMinimapIcon();
+	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageAdded, function(event, newMessage)
+		self:MarkDirty("UpdateAll");
+	end)
+	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageDeleted, function(event, messageId)
+		self:MarkDirty("UpdateAll");
+	end)
 	self.MessageList:RegisterCallback(MessageListEvent.RowSelected, function(event, message)
 		self.MessageEditor:SetMessage(message)
 		--self:MarkDirty("UpdateAll");
@@ -33,15 +39,6 @@ function MessageBarkerFrameMixin:MarkDirty(maskName)
 	self.DirtyFlags:MarkDirty(self.DirtyFlags[maskName]);
 end
 
-
-function ItemSlotClicked(itemSlot)
-	local objtype, _, itemlink = GetCursorInfo()
-	ClearCursor()
-	if objtype == "item" then
-	   print(itemlink) 
-	end
-end
-
 function MessageBarkerFrameMixin:Toggle()
 	ToggleFrame(MessageBarkerFrame);
 end
@@ -62,11 +59,60 @@ function MessageBarkerFrameMixin:Update()
 	end
 end
 
-function MessageBarkerFrameMixin:AddNewMessage()
+function MessageBarkerFrameMixin:AddButtonClicked(mouseButton)
+	if mouseButton == "RightButton" then
+		self:ShowMessageTypeDropDown()
+	else
+		self:AddNewMessage();
+	end
+end
+ 
+function MessageBarkerFrameMixin:ShowMessageTypeDropDown()
+	self.MessageTypeDropDown.displayMode = "MENU";
+	self.MessageTypeDropDown.initialize = MessageBarkerFrame_InitializeDropDown;
+	ToggleDropDownMenu(1, self.NewButton, self.MessageTypeDropDown, "cursor");
+end
+
+function MessageBarkerFrame_InitializeDropDown()
+	MessageBarkerFrame_AppendCreateMessageDropDownInfo()
+	MessageBarkerFrame_AppendCancelDropDownInfo()
+end
+
+function MessageBarkerFrame_AppendCreateMessageDropDownInfo()
+	local info = UIDropDownMenu_CreateInfo();
+	info.text = "Create New Message";
+	info.isTitle = 1;
+	info.notCheckable = 1;
+	UIDropDownMenu_AddButton(info);
+	for messageType, i in pairs(MessageBarker_MessageTypes) do
+		info = UIDropDownMenu_CreateInfo()
+		info.text = messageType
+		info.value = i
+		info.notCheckable = 1;
+		info.func = function() MessageBarker:AddNewMessage(i) end
+		UIDropDownMenu_AddButton(info)
+	end
+end
+
+function MessageBarkerFrame_AppendCancelDropDownInfo()
+	UIDropDownMenu_AddSeparator(1);
+	info = UIDropDownMenu_CreateInfo();
+	info.text = CANCEL;
+	info.notCheckable = 1;
+	info.func = function() HideDropDownMenu(1); end;
+	UIDropDownMenu_AddButton(info);
+end
+
+function MessageBarkerFrameMixin:AddNewMessage(messageType)
+	--local objtype, _, itemlink = GetCursorInfo()
+	--ClearCursor()
+	--if objtype == "item" then
+	--   print(itemlink) 
+	--end
 	local newMessage = {
 		id = MessageBarker:GetNextMessageID(),
 		name = "Test Message",
-		text = "Message Text",
+		type = messageType,
 		outputs = {}
 	}
 	local messages = MessageBarker:GetMessages()
@@ -78,7 +124,6 @@ end
 function MessageBarkerFrameMixin:DeleteSelectedMessage()
 	local selectedMessage = self.MessageList:GetSelectedMessage()
 	MessageBarker:DeleteMessage(selectedMessage)
-	self:MarkDirty("UpdateAll");
 end
 
 -- Minimap icon

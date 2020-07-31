@@ -39,14 +39,14 @@
 					<Anchor point="RIGHT" x="-7"/>
 				</Anchors>
 			</Frame>
-			<Button name="$parentNewButton" parentKey="NewButton" inherits="UIPanelButtonTemplate" text="ADD">
+ 			<Button name="$parentNewButton" parentKey="NewButton" inherits="UIPanelButtonTemplate" text="ADD" registerForClicks="LeftButtonUp,RightButtonUp">
 				<Size x="80" y="22"/>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" x="1.0" y="4.0" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						self:GetParent():AddNewMessage();
+						self:GetParent():AddButtonClicked(button);
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -61,6 +61,7 @@
 					</OnClick>
 				</Scripts>
 			</Button>
+			<Frame name="$parentMessageTypeDropDown" parentKey="MessageTypeDropDown" />
 		</Frames>
 		<Scripts>
 			<OnLoad method="OnLoad"/>

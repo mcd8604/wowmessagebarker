@@ -1,9 +1,29 @@
-MessageBarker = {}
+MessageBarker = CreateFromMixins(CallbackRegistryBaseMixin);
+MessageBarkerEvent = {
+	MessageAdded = 1,
+	MessageDeleted = 2,
+}
 
 -- Slash Commands
 SLASH_MESSAGEBARKER1, SLASH_MESSAGEBARKER2, SLASH_MESSAGEBARKER3 = "/bm", "/barkmsg", "/barkmessage"
 SlashCmdList.MESSAGEBARKER = function(msg, editBox)
 	MessageBarker:BarkMessage(msg, MessageBarkerDB.char.testOutputMode or false)
+end
+
+MessageBarker_MessageTypes = {
+	Basic = 1,
+	Sale = 2,
+}
+
+function MessageBarker:Load()
+	self:OnLoad() -- for CallbackRegistryBaseMixin:OnLoad
+	MessageBarkerDB = LibStub("AceDB-3.0"):New("MessageBarkerDB", {
+		factionrealm = self:GetDefaultFactionRealmDB(),
+		char = {
+			minimapButton = {hide = false},
+			testOutputMode = false
+		}
+	}, true)
 end
 
 function MessageBarker:BarkMessage(messageId, testOutput)
@@ -55,16 +75,6 @@ function MessageBarker:EnsureDB()
 	end
 end
 
-function MessageBarker:InitializeDB()
-	MessageBarkerDB = LibStub("AceDB-3.0"):New("MessageBarkerDB", {
-		factionrealm = self:GetDefaultFactionRealmDB(),
-		char = {
-			minimapButton = {hide = false},
-			testOutputMode = false
-		}
-	}, true)
-end
-
 function MessageBarker:GetDefaultFactionRealmDB()
 	return {
 		messages = {},
@@ -94,6 +104,7 @@ function MessageBarker:DeleteMessage(message)
 	if message and message.id then
 		local messages = self:GetMessages()
 		messages[message.id] = nil
+		self:TriggerEvent(MessageBarkerEvent.MessageDeleted, message.id)
 	end
 end
 
@@ -120,4 +131,16 @@ function MessageBarker:GetMaxMessageID()
 		end
 	end
 	return maxId
+end
+
+function MessageBarker:AddNewMessage(messageType)
+	local newMessage = {
+		id = MessageBarker:GetNextMessageID(),
+		name = "Test Message",
+		type = messageType,
+		outputs = {}
+	}
+	local messages = MessageBarker:GetMessages()
+	messages[newMessage.id] = newMessage
+	self:TriggerEvent(MessageBarkerEvent.MessageAdded, newMessage)
 end
