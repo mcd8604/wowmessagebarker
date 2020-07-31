@@ -1,0 +1,35 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="MessageTypeTemplates.lua"/>
+	<Frame name="MessageTypeTemplate" virtual="true" mixin="MessageTypeTemplateMixin">
+	</Frame>
+	<Frame name="BasicMessageTypeTemplate" inherits="MessageTypeTemplate" virtual="true" mixin="BasicMessageTypeTemplateMixin">
+		<Frames>
+			<EditBox name="$parentMessageEditBox" parentKey="MessageEditBox" multiLine="true" inherits="InputBoxTemplate" autoFocus="false">
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="BOTTOMRIGHT"/>
+				</Anchors>
+			</EditBox>
+		</Frames>
+	</Frame>
+	<Frame name="SaleMessageTypeTemplate" inherits="MessageTypeTemplate" virtual="true" mixin="SaleMessageTypeTemplateMixin">
+		<Layers>
+			<Layer level="BORDER">
+				<FontString name="$parentPriceFontString" inherits="GameFontNormalLeft" text="Price:">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="7" y="-11"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox name="$parentPriceEditBox" parentKey="PriceEditBox" inherits="InputBoxTemplate" autoFocus="false">
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPriceFontString"/>
+				</Anchors>
+				<Size x="100" y="22"/>
+			</EditBox>
+		</Frames>
+	</Frame>
+</Ui>

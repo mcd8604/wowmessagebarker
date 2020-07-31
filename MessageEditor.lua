@@ -11,19 +11,36 @@ function MessageEditorMixin:Load()
 		checkButton.Text:SetText('')
 		checkButton:ClearAllPoints()
 	end
+	self:LoadMessageTypeFrames()
 	self.outputSelectorPool = CreateFramePool("CheckButton", self.OutputSelectFrame, "ChatConfigCheckButtonTemplate", ResetCheckButton);
 	self.outputSelectors = {}
 	self:AddEvent("CHANNEL_UI_UPDATE")
+end
+
+-- NOTE: Message type templates should follow the naming convention: "<MessageType>MessageTypeTemplate"
+function MessageEditorMixin:LoadMessageTypeFrames()
+	self.messageTypeFrames = {}
+	for messageType, i in pairs(MessageBarker_MessageTypes) do
+		print(self:GetName())
+		local frameName = (self:GetName() or '').."_MessageContentFrame_"..messageType
+		local templateName = messageType.."MessageTypeTemplate"		
+		local frame = CreateFrame("Frame", frameName, self.MessageContentFrame, templateName)
+		frame:SetAllPoints() 
+		frame:Hide()
+		self.messageTypeFrames[i] = frame
+	end
 end
 
 function MessageEditorMixin:SetMessage(message)
 	self.currentMessage = message
 	if self.currentMessage then
 		self.NameEditBox:SetText(self.currentMessage.name or '')
-		--self.MessageEditBox:SetText(self.currentMessage.message or '')
+		if not self.currentMessage.type then
+			self.currentMessage.type = MessageBarker_MessageTypes.Basic
+		end
 		self.currentMessageTypeString = MessageBarker:GetMessageTypeString(self.currentMessage.type)
 		self.MessageTypeFontStringValue:SetText(self.currentMessageTypeString)
-		self:LoadMessageContentFrame()
+		self:SetMessageContentFrame()
 		self:SetChatOutputSelectors()
 		self:Show();
 	else 
@@ -31,10 +48,14 @@ function MessageEditorMixin:SetMessage(message)
 	end
 end
 
--- NOTE: Message type templates should following the naming convention: "<MessageType>MessageTypeTemplate"
-function MessageEditorMixin:LoadMessageContentFrame()
-	local templateName = self.currentMessageTypeString.."MessageTypeTemplate"
-	-- TODO create frame from template
+function MessageEditorMixin:SetMessageContentFrame()
+	for _, frame in ipairs(self.messageTypeFrames) do
+		frame:Hide()
+	end
+	local frame = self.messageTypeFrames[self.currentMessage.type]
+	assert(frame, "No frame exists for message type: "..self.currentMessageTypeString)
+	frame:SetMessage(self.currentMessage)
+	frame:Show()
 end
 
 -- SendChatMessage(msg [, chatType, languageID, target])
