@@ -13,8 +13,7 @@ function MessageBarkerFrameMixin:OnLoad()
 		self.MessageEditor:SetMessage(message)
 		--self:MarkDirty("UpdateAll");
 	end)
-	self.MessageEditor:RegisterCallback(MessageEditorEvent.Saving, function(event, message)
-		MessageBarker:SaveMessage(message)
+	self.MessageEditor:RegisterCallback(MessageEditorEvent.MessageChanged, function(event, message)		
 		self:MarkDirty("UpdateAll");
 	end)
 	self.MessageList:SetMessages(MessageBarker:GetMessages());

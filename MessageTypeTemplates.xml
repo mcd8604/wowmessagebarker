@@ -10,6 +10,11 @@
 					<Anchor point="TOPLEFT"/>
 					<Anchor point="BOTTOMRIGHT"/>
 				</Anchors>
+				<Scripts>
+					<OnTextChanged>
+						self:GetParent():OnTextChanged()
+					</OnTextChanged>
+				</Scripts>
 			</EditBox>
 		</Frames>
 	</Frame>

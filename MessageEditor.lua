@@ -1,6 +1,6 @@
 MessageEditorMixin = CreateFromMixins(CallbackRegistryBaseMixin, EventRegistrationHelper);
 MessageEditorEvent = {
-	Saving = 1,
+	MessageChanged = 1,
 }
 
 function MessageEditorMixin:Load()
@@ -172,20 +172,24 @@ function MessageEditorMixin:EnsureMessageOutputs()
 	return ensured
 end
 
-function MessageEditorMixin:CancelMessageEdit()
+--[[ function MessageEditorMixin:CancelMessageEdit()
 	local text = ''
 	if self.currentMessage then
 		text = self.currentMessage.message or ''
 	end
 	--self.MessageEditBox:SetText(text)
-end
+end ]]
 
-function MessageEditorMixin:SaveMessage()
+--[[ function MessageEditorMixin:SaveMessage()
 	if self.currentMessage then
 		self.currentMessage.name = self.NameEditBox:GetText()
-		--self.currentMessage.message = self.MessageEditBox:GetText()
 		self:TriggerEvent(MessageEditorEvent.Saving, self.currentMessage)
 	end
+end ]]
+
+function MessageEditorMixin:OnNameChanged()
+	self.currentMessage.name = self.NameEditBox:GetText()
+	self:TriggerEvent(MessageEditorEvent.MessageChanged, self.currentMessage)
 end
 
 function MessageEditorMixin:OnEvent(event, ...)
