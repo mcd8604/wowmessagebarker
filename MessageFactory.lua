@@ -20,14 +20,14 @@ function MessageFactory:LoadFactoryMethods()
 	}
 end
 
-function MessageFactory:CreateMessageByType(messageType, ...)
+function MessageFactory:CreateMessage(messageType, ...)
 	if not self.MessageFactoryMethods then
 		self:LoadFactoryMethods()
 	end
 	local factory = self.MessageFactoryMethods[messageType]
 	assert(factory and type(factory) == "function", "Invalid Message Type: "..messageType)
 	local message = factory(self, ...)
-	message.id = self:GetNextMessageID()
+	message.id = MessageBarker:GetNextMessageID()
 	message.type = messageType
 	message.outputs = {} -- TODO load default outputs (configured by user under Interface Options) per messageType
 	return message

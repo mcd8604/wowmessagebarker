@@ -88,7 +88,7 @@ function MessageBarkerFrame_AppendCreateMessageDropDownInfo()
 		info.text = messageType
 		info.value = i
 		info.notCheckable = 1;
-		info.func = function() MessageBarker:AddNewMessage(MessageBarker:CreateMessageByType(i)) end
+		info.func = function() MessageBarker:AddNewMessage(MessageBarker:CreateMessage(i)) end
 		UIDropDownMenu_AddButton(info)
 	end
 end
@@ -107,9 +107,9 @@ function MessageBarkerFrameMixin:AddNewMessage()
 	ClearCursor()
 	local newMessage;
 	if objectType == "item" then
-		newMessage = MessageBarker:CreateMessage_Sale(itemId, itemLink)
+		newMessage = MessageBarker:CreateMessage(MessageBarker_MessageTypes.Sale, itemId, itemLink)
 	else
-		newMessage = MessageBarker:CreateMessage_Basic()
+		newMessage = MessageBarker:CreateMessage(MessageBarker_MessageTypes.Basic)
 	end
 	MessageBarker:AddNewMessage(newMessage)
 end
