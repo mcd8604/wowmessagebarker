@@ -45,7 +45,7 @@ end
 function MessageFactory:GenerateText(message)
 	assert(message)
 	if not self.TextGenerators then
-		self:LoadFactoryMethods()
+		self:LoadTextGenerators()
 	end	
 	local generator = self.TextGenerators[message.type]
 	assert(generator and type(generator) == "function", "Invalid Message Type: "..message.type)
@@ -64,7 +64,7 @@ function MessageFactory:CreateMessage_Basic()
 end
 
 function MessageFactory:GenerateText_Basic(message)
-	return message.content.text
+	return message.content
 end
 
 function MessageFactory:CreateMessage_Sale(itemId, itemLink)
