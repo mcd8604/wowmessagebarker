@@ -21,13 +21,6 @@ function MessageBarker:Load()
 	}, true)
 end
 
-do
-	local messageTypes = tInvert(MessageBarker_MessageTypes)
-	function MessageBarker:GetMessageTypeString(messageType)
-		return messageTypes[messageType] or 'Unknown Message Type'
-	end
-end
-
 function MessageBarker:BarkMessage(messageId, testOutput)
 	if messageId then
 		if testOutput == nil then

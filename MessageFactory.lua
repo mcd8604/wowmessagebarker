@@ -6,6 +6,13 @@ MessageBarker_MessageTypes = {
 	Sale = 2,
 }
 
+do
+	local messageTypes = tInvert(MessageBarker_MessageTypes)
+	function MessageFactory:GetMessageTypeString(messageType)
+		return messageTypes[messageType] or 'Unknown Message Type'
+	end
+end
+
 function MessageFactory:LoadFactoryMethods()
 	self.MessageFactoryMethods = {
 		[MessageBarker_MessageTypes.Basic]	= MessageBarker.CreateMessage_Basic,

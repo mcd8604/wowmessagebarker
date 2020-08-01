@@ -5,10 +5,11 @@ function MessageRowMixin:Setup(message)
 	if self.message then
 		if self.message.name then
 			local nameText = format("%s (%s)", self.message.name, self.message.id)
-			self.name:SetText(NORMAL_FONT_COLOR:WrapTextInColorCode(nameText));
+			self.name:SetText(nameText);
 		end
-		if self.message.message then
-			self.info:SetText(NORMAL_FONT_COLOR:WrapTextInColorCode(self.message.message));
+		if self.message.type then
+			local typeStr = MessageBarker:GetMessageTypeString(self.message.type)
+			self.info:SetText(typeStr);
 		end
 	else
 		self:ResetDisplay()
