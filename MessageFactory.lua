@@ -26,7 +26,11 @@ function MessageFactory:CreateMessageByType(messageType, ...)
 	end
 	local factory = self.MessageFactoryMethods[messageType]
 	assert(factory and type(factory) == "function", "Invalid Message Type: "..messageType)
-	return factory(self, ...)
+	local message = factory(self, ...)
+	message.id = self:GetNextMessageID()
+	message.type = messageType
+	message.outputs = {} -- TODO load default outputs (configured by user under Interface Options) per messageType
+	return message
 end
 
 -- NOTE: Messages are persistent data objects, meaning only data is saved and the methods/functions are not.
@@ -54,11 +58,8 @@ end
 
 function MessageFactory:CreateMessage_Basic()
 	local newMessage = {
-		id = MessageBarker:GetNextMessageID(),
 		name = "New Message",
-		type = MessageBarker_MessageTypes.Basic,
 		content = 'Write your message content here.',
-		outputs = {},
 	}
 	return newMessage
 end
@@ -68,26 +69,26 @@ function MessageFactory:GenerateText_Basic(message)
 end
 
 function MessageFactory:CreateMessage_Sale(itemId, itemLink)
-	local messageName = 'New Item Sale'
-	local itemName = nil
-	if itemId then
-		itemName = C_Item.GetItemNameByID(itemId)
-		messageName = itemName or messageName
-	end
+	local item = self:CreateItemContent(itemId, itemLink)
+	local messageName = item.name or 'New Item Sale'
 	local newMessage = {
-		id = MessageBarker:GetNextMessageID(),
 		name = messageName,
-		type = MessageBarker_MessageTypes.Sale,
 		content = {
 			prefix = "WTS ",
-			items = {
-				{ link = itemLink, name = itemName, price = "" },
-			},
+			items = { item },
 			suffix = "",
 		},
-		outputs = {},
 	}
 	return newMessage
+end
+
+function MessageFactory:CreateItemContent(itemId, itemLink)
+	local itemName, itemIcon;
+	if itemId then
+		itemName = C_Item.GetItemNameByID(itemId)
+		itemIcon = GetItemIcon(itemId)
+	end
+	return { id = itemId, link = itemLink, name = itemName, icon = itemIcon, price = "" }
 end
 
 function MessageFactory:GenerateText_Sale(message)
