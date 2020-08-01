@@ -27,6 +27,7 @@ function MessageFactory:CreateMessage_Basic()
 		id = MessageBarker:GetNextMessageID(),
 		name = "New Message",
 		type = MessageBarker_MessageTypes.Basic,
+		content = { text = 'Write your message content here.' },
 		outputs = {},
 	}
 	return newMessage
@@ -44,6 +45,7 @@ function MessageFactory:CreateMessage_Sale(itemId, itemLink)
 		content = {
 			itemLink = itemLink,
 			price = 0,
+			text = "WTS "..(itemLink or '')
 		},
 		outputs = {},
 	}

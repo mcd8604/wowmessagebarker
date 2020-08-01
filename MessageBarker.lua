@@ -39,7 +39,7 @@ function MessageBarker:BarkMessage(messageId, testOutput)
 				if testOutput then
 					self:TestMessageOutput(message, output)
 				else
-					SendChatMessage(message.message, output.chatType, nil, self:LookupChannelID(output.channel) or 0)
+					SendChatMessage(message.content.text, output.chatType, nil, self:LookupChannelID(output.channel) or 0)
 				end
 			end
 		end
@@ -49,9 +49,9 @@ end
 function MessageBarker:TestMessageOutput(message, output)
 	local messageToPrint = nil
 	if output.channel ~= nil then
-		messageToPrint = format("[%s(%i)]: %s", _G[output.chatType], self:LookupChannelID(output.channel), message.message)
+		messageToPrint = format("[%s(%i)]: %s", _G[output.chatType], self:LookupChannelID(output.channel), message.content.text)
 	else 
-		messageToPrint = format("[%s]: %s", _G[output.chatType], message.message)
+		messageToPrint = format("[%s]: %s", _G[output.chatType], message.content.text)
 	end
 	print(messageToPrint)
 end
