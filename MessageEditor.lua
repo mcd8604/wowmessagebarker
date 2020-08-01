@@ -20,12 +20,14 @@ end
 -- NOTE: Message type templates should follow the naming convention: "<MessageType>MessageTypeTemplate"
 function MessageEditorMixin:LoadMessageTypeFrames()
 	self.messageTypeFrames = {}
-	for messageType, i in pairs(MessageBarker_MessageTypes) do
-		print(self:GetName())
-		local frameName = (self:GetName() or '').."_MessageContentFrame_"..messageType
-		local templateName = messageType.."MessageTypeTemplate"		
-		local frame = CreateFrame("Frame", frameName, self.MessageContentFrame, templateName)
-		frame:SetAllPoints() 
+	for messageType, i in pairs(MessageBarker_MessageTypes) do		
+		local frameName = (self:GetName() or '')..messageType.."ContentFrame"
+		local templateName = messageType.."MessageTypeTemplate"
+		local frame = CreateFrame("Frame", frameName, self, templateName)
+		frame:SetPoint("TOP", self.MessageTypeFontStringHeader, "BOTTOM")
+		frame:SetPoint("LEFT", self, "LEFT")
+		frame:SetPoint("RIGHT", self, "RIGHT")
+		frame:SetPoint("BOTTOM", self.OutputSelectFrame, "TOP")
 		frame:Hide()
 		self.messageTypeFrames[i] = frame
 	end
@@ -55,7 +57,9 @@ function MessageEditorMixin:SetMessageContentFrame()
 	local frame = self.messageTypeFrames[self.currentMessage.type]
 	assert(frame, "No frame exists for message type: "..self.currentMessageTypeString)
 	frame:SetMessage(self.currentMessage)
+	--self.MessageContentFrame:SetHeight(frame:GetHeight())
 	frame:Show()
+	--self.OutputSelectFrame:SetPoint("TOPLEFT", frame, "BOTTOMLEFT")
 end
 
 -- SendChatMessage(msg [, chatType, languageID, target])

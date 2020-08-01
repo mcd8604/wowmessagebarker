@@ -2,23 +2,57 @@
 ..\FrameXML\UI.xsd">
 	<Script file="MessageTypeTemplates.lua"/>
 	<Frame name="MessageTypeTemplate" virtual="true" mixin="MessageTypeTemplateMixin">
+		<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<EdgeSize>
+				<AbsValue val="16"/>
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="16"/>
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5"/>
+			</BackgroundInsets>
+		</Backdrop>
 	</Frame>
 	<Frame name="BasicMessageTypeTemplate" inherits="MessageTypeTemplate" virtual="true" mixin="BasicMessageTypeTemplateMixin">
+		<Size y="85"/>
 		<Frames>
-			<EditBox name="$parentMessageEditBox" parentKey="MessageEditBox" multiLine="true" inherits="InputBoxTemplate" autoFocus="false">
+			<ScrollFrame name="$parentMessageScrollFrame" parentKey="MessageScrollFrame" inherits="UIPanelScrollFrameTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT"/>
-					<Anchor point="BOTTOMRIGHT"/>
+					<Anchor point="TOPLEFT" x="5" y="-5"/>
+					<Anchor point="RIGHT" x="-27"/>
 				</Anchors>
-				<Scripts>
-					<OnTextChanged>
-						self:GetParent():OnTextChanged()
-					</OnTextChanged>
-				</Scripts>
-			</EditBox>
+				<ScrollChild>
+					<EditBox name="$parentMessageEditBox" parentKey="MessageEditBox" multiLine="true" autoFocus="false">
+						<Size>
+							<RelDimension x="100" y="100"/>
+						</Size>
+						<Anchors>
+							<Anchor point="LEFT"/>
+							<Anchor point="RIGHT"/>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								ScrollingEdit_OnCursorChanged(self, 0, 0, 0, 0);
+							</OnLoad>
+							<OnTextChanged>
+								self:GetParent():GetParent():OnTextChanged()
+								ScrollingEdit_OnTextChanged(self, self:GetParent());
+							</OnTextChanged>
+							<OnCursorChanged function="ScrollingEdit_OnCursorChanged"/>
+							<OnUpdate>
+								ScrollingEdit_OnUpdate(self, elapsed, self:GetParent());
+							</OnUpdate>
+							<OnEscapePressed function="EditBox_ClearFocus"/>
+						</Scripts>
+						<FontString inherits="GameFontHighlight"/>
+					</EditBox>
+				</ScrollChild>
+			</ScrollFrame>
 		</Frames>
 	</Frame>
 	<Frame name="SaleMessageTypeTemplate" inherits="MessageTypeTemplate" virtual="true" mixin="SaleMessageTypeTemplateMixin">
+		
 		<Layers>
 			<Layer level="BORDER">
 				<FontString name="$parentPriceFontString" inherits="GameFontNormalLeft" text="Price:">

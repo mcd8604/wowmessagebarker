@@ -56,13 +56,13 @@
 					</OnTextChanged>
 				</Scripts>
 			</EditBox>
-			<Frame name="$parentMessageContentFrame" parentKey="MessageContentFrame">
+			<!-- <Frame name="$parentMessageContentFrame" parentKey="MessageContentFrame">
 				<Size x="0" y="22"/>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentMessageTypeFontStringHeader"/>
 					<Anchor point="RIGHT" relativePoint="RIGHT" />
 				</Anchors>
-			</Frame>
+			</Frame> -->
 			<!-- <Button name="$parentCancelButton" parentKey="CancelButton" inherits="UIPanelButtonTemplate" text="Cancel">
 				<Size x="80" y="22"/>
 				<Anchors>
@@ -98,8 +98,8 @@
 					</BackgroundInsets>
 				</Backdrop>
 				<Anchors>
-					<Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentMessageContentFrame" y="-4"/>
-					<Anchor point="LEFT" relativePoint="LEFT" />
+					<Anchor point="TOPLEFT" y="-200"/>
+					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
 				</Anchors>
 			</Frame>
 		</Frames>
