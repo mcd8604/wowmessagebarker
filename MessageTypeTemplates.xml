@@ -24,13 +24,6 @@
 				</Anchors>
 				<ScrollChild>
 					<EditBox name="$parentMessageEditBox" parentKey="MessageEditBox" multiLine="true" autoFocus="false">
-						<Size>
-							<RelDimension x="100" y="100"/>
-						</Size>
-						<Anchors>
-							<Anchor point="LEFT"/>
-							<Anchor point="RIGHT"/>
-						</Anchors>
 						<Scripts>
 							<OnLoad>
 								ScrollingEdit_OnCursorChanged(self, 0, 0, 0, 0);

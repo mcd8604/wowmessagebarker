@@ -8,6 +8,8 @@ BasicMessageTypeTemplateMixin = {}
 function BasicMessageTypeTemplateMixin:SetMessage(message)
 	assert(message)
 	self.message = message
+	self.MessageScrollFrame.MessageEditBox:SetPoint("LEFT")
+	self.MessageScrollFrame.MessageEditBox:SetPoint("RIGHT")
 	self.MessageScrollFrame.MessageEditBox:SetText(message.content.text or '')
 end
 
