@@ -21,7 +21,8 @@ end
 function MessageEditorMixin:LoadMessageTypeFrames()
 	self.messageTypeFrames = {}
 	for messageType, i in pairs(MessageBarker_MessageTypes) do		
-		local frameName = (self:GetName() or '')..messageType.."ContentFrame"
+		local key = messageType.."ContentFrame"
+		local frameName = (self:GetName() or '')..key
 		local templateName = messageType.."MessageTypeTemplate"
 		local frame = CreateFrame("Frame", frameName, self, templateName)
 		self[key] = frame
