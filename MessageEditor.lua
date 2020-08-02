@@ -24,6 +24,9 @@ function MessageEditorMixin:LoadMessageTypeFrames()
 		local frameName = (self:GetName() or '')..messageType.."ContentFrame"
 		local templateName = messageType.."MessageTypeTemplate"
 		local frame = CreateFrame("Frame", frameName, self, templateName)
+		self[key] = frame
+		-- TODO move to OnLoad?
+		frame:Load()
 		frame:SetPoint("TOP", self.MessageTypeFontStringHeader, "BOTTOM")
 		frame:SetPoint("LEFT", self, "LEFT")
 		frame:SetPoint("RIGHT", self, "RIGHT")
