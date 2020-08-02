@@ -31,7 +31,7 @@
 					<Anchor point="BOTTOMLEFT" x="7" y="28" />
 				</Anchors>
 			</ScrollFrame>
-			<Frame parentKey="MessageEditor" inherits="MessageEditorTemplate" enableMouseMotion="true">
+			<Frame name="$parentMessageEditor" parentKey="MessageEditor" inherits="MessageEditorTemplate" enableMouseMotion="true">
 				<Anchors>
 					<Anchor point="TOP" relativeTo="$parentMessageList"/>
 					<Anchor point="LEFT" relativeTo="$parentMessageListScrollBar" relativePoint="RIGHT"/>
