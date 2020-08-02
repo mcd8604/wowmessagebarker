@@ -86,7 +86,7 @@
 				</Scripts>
 			</Button> -->
 			<Frame parentKey="OutputSelectFrame">
-				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+				<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true" alphaMode="BLEND">
 					<EdgeSize>
 						<AbsValue val="16"/>
 					</EdgeSize>
@@ -98,7 +98,7 @@
 					</BackgroundInsets>
 				</Backdrop>
 				<Anchors>
-					<Anchor point="TOPLEFT" y="-200"/>
+					<Anchor point="TOPLEFT" y="-300"/>
 					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
 				</Anchors>
 			</Frame>
