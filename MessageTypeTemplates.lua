@@ -68,12 +68,15 @@ function SaleMessageTypeTemplateMixin:CreateItemRow(item)
 	local row = self.itemRowPool:Acquire()
 	self:AnchorItemRow(row)
 	if item then
+		row.item = item
 		if item.icon then
 			row.Item.IconTexture:SetTexture(item.icon)
 			row.Item.IconTexture:Show()
 		end
 		row.Name:SetText(item.name)
 		row.Price:SetText(item.price)
+	else
+		row.Name:SetText("Place item to add")
 	end
 	row:Show()
 	return row
@@ -86,4 +89,19 @@ function SaleMessageTypeTemplateMixin:AnchorItemRow(row)
 		row:SetPoint("TOPLEFT", self.SaleScrollFrame.ScrollChildFrame, "TOPLEFT");
 	end
 	self.previousItemRow = row;
+end
+
+SaleButtonTemplateMixin = {}
+
+function SaleButtonTemplateMixin:OnClick()
+	local objectType, itemId, itemLink = GetCursorInfo()
+	if objectType == "item" and not self.item then
+		ClearCursor()
+		-- TODO should probably replace this with event pattern
+		local scrollChildFrame = self:GetParent()
+		local saleScrollFrame = scrollChildFrame:GetParent()
+		local saleMessageTypeTemplate = saleScrollFrame:GetParent()
+		table.insert(saleMessageTypeTemplate.message.content.items, MessageFactory:CreateItemContent(itemId, itemLink))
+		saleMessageTypeTemplate:Update()
+	end
 end

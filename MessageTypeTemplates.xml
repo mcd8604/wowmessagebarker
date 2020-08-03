@@ -111,7 +111,7 @@
 			</ScrollFrame>
 		</Frames>
 	</Frame>
-	<Button name="SaleButtonTemplate" hidden="false" virtual="true">
+	<Button name="SaleButtonTemplate" hidden="false" virtual="true" mixin="SaleButtonTemplateMixin">
 		<Size>
 			<AbsDimension x="200" y="37"/>
 		</Size>
@@ -276,7 +276,8 @@
 			</EditBox>
 		</Frames>
 		<Scripts>
-			<OnClick>
+			<OnClick method="OnClick">
+
 				<!-- if ( IsModifiedClick() ) then
 					if ( not HandleModifiedItemClick(GetAuctionItemLink("owner", self:GetID() + GetEffectiveAuctionsScrollFrameOffset())) ) then
 						if ( IsModifiedClick("DRESSUP") ) then
