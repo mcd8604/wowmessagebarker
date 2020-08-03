@@ -52,11 +52,14 @@ function SaleMessageTypeTemplateMixin:Update()
 	self.itemRowPool:ReleaseAll();
 	self.itemRows = {}
 	self.previousItemRow = nil;
-	local numItems = #self.message.content.items
+	local numItems = #self.message.content.items + 1
 	for i, item in ipairs(self.message.content.items) do
 		local itemRow = self:CreateItemRow(item)
 		table.insert(self.itemRows, itemRow)
 	end
+	-- Empty row for creating a new item
+	local itemRow = self:CreateItemRow()
+	table.insert(self.itemRows, itemRow)
 	local numItemsRequiredToEnableDisplay = 0
 	FauxScrollFrame_Update(self.SaleScrollFrame, numItems, numItemsRequiredToEnableDisplay, self.saleButtonHeight);
 end
@@ -64,12 +67,14 @@ end
 function SaleMessageTypeTemplateMixin:CreateItemRow(item)
 	local row = self.itemRowPool:Acquire()
 	self:AnchorItemRow(row)
-	if item.icon then
-		row.Item.IconTexture:SetTexture(item.icon)
-		row.Item.IconTexture:Show()
+	if item then
+		if item.icon then
+			row.Item.IconTexture:SetTexture(item.icon)
+			row.Item.IconTexture:Show()
+		end
+		row.Name:SetText(item.name)
+		row.Price:SetText(item.price)
 	end
-	row.Name:SetText(item.name)
-	row.Price:SetText(item.price)
 	row:Show()
 	return row
 end
