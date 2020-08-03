@@ -176,7 +176,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button name="$parentItem">
+			<Button name="$parentItem" parentKey="Item">
 				<Size>
 					<AbsDimension x="32" y="32"/>
 				</Size>
@@ -189,7 +189,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="BORDER">
-						<Texture name="$parentIconTexture"/>
+						<Texture name="$parentIconTexture" parentKey="IconTexture"/>
 						<FontString name="$parentCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true">
 							<Anchors>
 								<Anchor point="BOTTOMRIGHT">

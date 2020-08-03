@@ -30,7 +30,13 @@ function SaleMessageTypeTemplateMixin:Load()
 	-- NOTE: button height needs to match SaleButtonTemplate.. REEEE
 	-- Can this be found dynamically intsead of hardcoding?
 	self.saleButtonHeight = 37
-	self.itemRowPool = CreateFramePool("Button", self.SaleScrollFrame.ScrollChildFrame, "SaleButtonTemplate");
+	local ResetItemRow = function(pool, itemRow)
+		itemRow.Item.IconTexture:Hide()
+		itemRow.Name:SetText('')
+		itemRow.Price:SetText('')
+		itemRow:Hide()
+	end
+	self.itemRowPool = CreateFramePool("Button", self.SaleScrollFrame.ScrollChildFrame, "SaleButtonTemplate", ResetItemRow);
 end
 
 function SaleMessageTypeTemplateMixin:SetMessage(message)
@@ -58,7 +64,10 @@ end
 function SaleMessageTypeTemplateMixin:CreateItemRow(item)
 	local row = self.itemRowPool:Acquire()
 	self:AnchorItemRow(row)
-	-- TODO set item link in item button
+	if item.icon then
+		row.Item.IconTexture:SetTexture(item.icon)
+		row.Item.IconTexture:Show()
+	end
 	row.Name:SetText(item.name)
 	row.Price:SetText(item.price)
 	row:Show()
