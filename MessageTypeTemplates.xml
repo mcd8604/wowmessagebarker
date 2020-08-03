@@ -74,8 +74,8 @@
 			</EditBox>
 			<ScrollFrame name="$parentSaleScrollFrame" parentKey="SaleScrollFrame" inherits="FauxScrollFrameTemplate">
 				<Anchors>
-					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentPrefixEditBox" y="5" />
-					<Anchor point="LEFT" />
+					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentPrefixEditBox" y="-2"/>
+					<Anchor point="LEFT"  x="7" />
 					<Anchor point="RIGHT" x="-27"/>
 					<Anchor point="BOTTOM" />
 				</Anchors>
