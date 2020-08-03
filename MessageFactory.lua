@@ -69,25 +69,26 @@ function MessageFactory:GenerateText_Basic(message)
 end
 
 function MessageFactory:CreateMessage_Sale(itemId, itemLink)
-	local item = self:CreateItemContent(itemId, itemLink)
-	local messageName = item.name or 'New Item Sale'
 	local newMessage = {
-		name = messageName,
+		name = 'New Item Sale',
 		content = {
 			prefix = "WTS ",
-			items = { item },
+			items = {},
 			suffix = "",
 		},
 	}
+	if itemId then
+		local item = self:CreateItemContent(itemId, itemLink)
+		newMessage.name = item.name
+		table.insert(newMessage.content.items, item)
+	end
 	return newMessage
 end
 
 function MessageFactory:CreateItemContent(itemId, itemLink)
 	local itemName, itemIcon;
-	if itemId then
-		itemName = C_Item.GetItemNameByID(itemId)
-		itemIcon = GetItemIcon(itemId)
-	end
+	itemName = C_Item.GetItemNameByID(itemId)
+	itemIcon = GetItemIcon(itemId)
 	return { id = itemId, link = itemLink, name = itemName, icon = itemIcon, price = "" }
 end
 
@@ -96,7 +97,7 @@ function MessageFactory:GenerateText_Sale(message)
 	if message.content.prefix then
 		text = message.content.prefix .. ' '
 	end
-	for i, item in message.content.items do
+	for i, item in ipairs(message.content.items) do
 		text = text .. '[' .. (item.link or item.name) .. (item.price or '') .. ']'
 	end
 	if message.content.suffix then
