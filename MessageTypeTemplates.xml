@@ -54,7 +54,7 @@
 				</FontString>
 				<FontString name="$parentSuffixFontString" inherits="GameFontNormalLeft" text="Suffix:">
 					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentPrefixEditBox" x="7"/>
+						<Anchor point="BOTTOMLEFT" />
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -63,12 +63,14 @@
 			<EditBox name="$parentPrefixEditBox" parentKey="PrefixEditBox" inherits="InputBoxTemplate" autoFocus="false">
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPrefixFontString" x="5"/>
+					<Anchor point="RIGHT" x="-5"/>
 				</Anchors>
-				<Size x="100" y="22"/>
+				<Size y="22"/>
 			</EditBox>
 			<EditBox name="$parentSuffixEditBox" parentKey="SuffixEditBox" inherits="InputBoxTemplate" autoFocus="false">
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSuffixFontString" x="5"/>
+					<Anchor point="RIGHT" x="5"/>
 				</Anchors>
 				<Size x="100" y="22"/>
 			</EditBox>
@@ -105,16 +107,14 @@
 						ScrollFrame_OnScrollRangeChanged(self);
 					</OnLoad> -->
 					<OnVerticalScroll>
-						self:GetParent().OnVerticalScroll()
+						self:GetParent():OnVerticalScroll()
 					</OnVerticalScroll>
 				</Scripts>
 			</ScrollFrame>
 		</Frames>
 	</Frame>
-	<Button name="SaleButtonTemplate" hidden="false" virtual="true" mixin="SaleButtonTemplateMixin">
-		<Size>
-			<AbsDimension x="200" y="37"/>
-		</Size>
+	<Button name="SaleButtonTemplate" virtual="true" mixin="SaleButtonTemplateMixin">
+		<Size y="37"/>
 		<Layers>
 			<Layer level="BACKGROUND">
 				<FontString name="$parentName" parentKey="Name" inherits="GameFontNormal" justifyH="LEFT">
@@ -289,10 +289,8 @@
 				end -->
 			</OnClick>
 		</Scripts>
-		<HighlightTexture name="$parentHighlight" file="Interface\HelpFrame\HelpFrameButton-Highlight" alphaMode="ADD">
-			<Size>
-				<AbsDimension x="540" y="32"/>
-			</Size>
+		<HighlightTexture name="$parentHighlight" parentKey="Highlight" file="Interface\HelpFrame\HelpFrameButton-Highlight" alphaMode="ADD">
+			<Size y="32" />
 			<Anchors>
 				<Anchor point="TOPLEFT">
 					<Offset>

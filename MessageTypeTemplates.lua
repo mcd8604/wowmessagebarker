@@ -35,6 +35,7 @@ function SaleMessageTypeTemplateMixin:Load()
 		itemRow.Name:SetText('')
 		itemRow.Price:SetText('')
 		itemRow:Hide()
+		itemRow:ClearAllPoints()
 	end
 	self.itemRowPool = CreateFramePool("Button", self.SaleScrollFrame.ScrollChildFrame, "SaleButtonTemplate", ResetItemRow);
 end
@@ -45,7 +46,7 @@ function SaleMessageTypeTemplateMixin:SetMessage(message)
 end
 
 function SaleMessageTypeTemplateMixin:OnVerticalScroll()
-	FauxScrollFrame_OnVerticalScroll(self, offset, saleButtonHeight, self:GetParent().Update);
+	FauxScrollFrame_OnVerticalScroll(self.SaleScrollFrame, self.offset, self.saleButtonHeight, self.Update);
 end
 
 function SaleMessageTypeTemplateMixin:Update()
@@ -84,10 +85,13 @@ end
 
 function SaleMessageTypeTemplateMixin:AnchorItemRow(row)
 	if self.previousItemRow then
-		row:SetPoint("TOPLEFT", self.previousItemRow, "BOTTOMLEFT", 0, -BUTTON_SPACING);
+		row:SetPoint("TOPLEFT", self.previousItemRow, "BOTTOMLEFT", 0, -2);
 	else
 		row:SetPoint("TOPLEFT", self.SaleScrollFrame.ScrollChildFrame, "TOPLEFT");
 	end
+	row:SetPoint("RIGHT", self.SaleScrollFrame, "RIGHT");
+	row.Price:SetPoint("LEFT", row.Name, "RIGHT")
+	--row.Highlight:SetPoint("RIGHT", row, "RIGHT")
 	self.previousItemRow = row;
 end
 
