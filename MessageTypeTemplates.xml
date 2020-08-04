@@ -54,7 +54,7 @@
 				</FontString>
 				<FontString name="$parentSuffixFontString" inherits="GameFontNormalLeft" text="Suffix:">
 					<Anchors>
-						<Anchor point="BOTTOMLEFT" />
+						<Anchor point="BOTTOMLEFT" x="7" y="11"/>
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -70,7 +70,7 @@
 			<EditBox name="$parentSuffixEditBox" parentKey="SuffixEditBox" inherits="InputBoxTemplate" autoFocus="false">
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSuffixFontString" x="5"/>
-					<Anchor point="RIGHT" x="5"/>
+					<Anchor point="RIGHT" x="-5"/>
 				</Anchors>
 				<Size x="100" y="22"/>
 			</EditBox>
