@@ -270,6 +270,11 @@
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentName" x="20"/>
 				</Anchors>
 				<Size x="100" y="22"/>
+				<Scripts>
+					<OnTextChanged>
+						self:GetParent():OnPriceChanged(userInput)
+					</OnTextChanged>
+				</Scripts>
 			</EditBox>
 		</Frames>
 		<Scripts>

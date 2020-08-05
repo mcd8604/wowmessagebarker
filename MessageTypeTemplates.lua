@@ -132,12 +132,17 @@ SaleButtonTemplateMixin = {}
 
 function SaleButtonTemplateMixin:OnClick()
 	local objectType, itemId, itemLink = GetCursorInfo()
-	print(self:GetName())
 	if objectType == "item" and not self.itemData then
 		ClearCursor()
 		-- TODO should probably replace this with event pattern
 		local saleMessageTypeTemplate = self:GetParent()
 		table.insert(saleMessageTypeTemplate.message.content.items, MessageFactory:CreateItemContent(itemId, itemLink))
 		saleMessageTypeTemplate:Update()
+	end
+end
+
+function SaleButtonTemplateMixin:OnPriceChanged(userInput)
+	if userInput then
+		self.itemData.price = self.Price:GetText()
 	end
 end
