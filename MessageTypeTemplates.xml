@@ -66,6 +66,13 @@
 					<Anchor point="RIGHT" x="-5"/>
 				</Anchors>
 				<Size y="22"/>
+				<Scripts>
+					<OnTextChanged>
+						if userInput then
+							self:GetParent().message.content.prefix = self:GetText()
+						end
+					</OnTextChanged>
+				</Scripts>
 			</EditBox>
 			<EditBox name="$parentSuffixEditBox" parentKey="SuffixEditBox" inherits="InputBoxTemplate" autoFocus="false">
 				<Anchors>
@@ -73,6 +80,13 @@
 					<Anchor point="RIGHT" x="-5"/>
 				</Anchors>
 				<Size x="100" y="22"/>
+				<Scripts>
+					<OnTextChanged>
+						if userInput then
+							self:GetParent().message.content.suffix = self:GetText()
+						end
+					</OnTextChanged>
+				</Scripts>
 			</EditBox>
 			<ScrollFrame name="$parentSaleScrollFrame" parentKey="SaleScrollFrame" inherits="FauxScrollFrameTemplate">
 				<Anchors>
@@ -272,14 +286,15 @@
 				<Size x="100" y="22"/>
 				<Scripts>
 					<OnTextChanged>
-						self:GetParent():OnPriceChanged(userInput)
+						if userInput then
+							self:GetParent().itemData.price = self:GetText()
+						end
 					</OnTextChanged>
 				</Scripts>
 			</EditBox>
 		</Frames>
 		<Scripts>
 			<OnClick method="OnClick">
-
 				<!-- if ( IsModifiedClick() ) then
 					if ( not HandleModifiedItemClick(GetAuctionItemLink("owner", self:GetID() + GetEffectiveAuctionsScrollFrameOffset())) ) then
 						if ( IsModifiedClick("DRESSUP") ) then

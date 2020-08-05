@@ -65,6 +65,8 @@ end
 
 function SaleMessageTypeTemplateMixin:SetMessage(message)
 	MessageTypeTemplateMixin.SetMessage(self, message)
+	self.PrefixEditBox:SetText(self.message.content.prefix)
+	self.SuffixEditBox:SetText(self.message.content.suffix)
 	self:Update()
 end
 
