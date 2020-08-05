@@ -68,8 +68,8 @@ function SaleMessageTypeTemplateMixin:SetMessage(message)
 	self:Update()
 end
 
-function SaleMessageTypeTemplateMixin:OnVerticalScroll()
-	FauxScrollFrame_OnVerticalScroll(self.SaleScrollFrame, self.offset or 0, self.saleButtonHeight, SaleScrollFrame_Update);
+function SaleMessageTypeTemplateMixin:OnVerticalScroll(offset)
+	FauxScrollFrame_OnVerticalScroll(self.SaleScrollFrame, offset, self.saleButtonHeight, SaleScrollFrame_Update);
 end
 
 function SaleScrollFrame_Update(self)
@@ -87,10 +87,10 @@ end
 
 function SaleMessageTypeTemplateMixin:Update()
 	local numItems = self:GetNumItems()
-	self.offset = self.offset or 0 -- offset is the (0-based) index of the first visible item
 	-- iterate the row buttons and update the data and visibility
 	for i = 1, self.maxNumButtonsVisible do
-		local index = self.offset + i
+		-- offset is the (0-based) index of the first visible item
+		local index = self.SaleScrollFrame.offset + i
 		local row = self.buttonRows[i]
 		if index <= numItems then
 			self:SetRowData(row, self:GetRowData(index))
@@ -100,12 +100,10 @@ function SaleMessageTypeTemplateMixin:Update()
 			row:Hide()
 		end
 	end
-	-- TODO check if bottom row is visible
-	--self:SetItemData()
+	-- temporary width values until this is working
 	local smallWidth = 200
 	local bigWidth = 220
 	FauxScrollFrame_Update(self.SaleScrollFrame, numItems, self.maxNumButtonsVisible, self.saleButtonHeight, self.buttonNamePrefix, smallWidth, bigWidth)
-	--FauxScrollFrame_Update(self.SaleScrollFrame, numItems, self.maxNumButtonsVisible, self.saleButtonHeight);
 end
 
 function SaleMessageTypeTemplateMixin:ResetItemRow(row)

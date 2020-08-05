@@ -101,7 +101,7 @@
 				</Layers>
 				<Scripts>
 					<OnVerticalScroll>
-						self:GetParent():OnVerticalScroll()
+						self:GetParent():OnVerticalScroll(offset)
 					</OnVerticalScroll>
 				</Scripts>
 			</ScrollFrame>
