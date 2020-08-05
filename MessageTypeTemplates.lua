@@ -69,11 +69,11 @@ function SaleMessageTypeTemplateMixin:SetMessage(message)
 end
 
 function SaleMessageTypeTemplateMixin:OnVerticalScroll(offset)
-	FauxScrollFrame_OnVerticalScroll(self.SaleScrollFrame, offset, self.saleButtonHeight, SaleScrollFrame_Update);
+	
 end
 
-function SaleScrollFrame_Update(self)
-	self:GetParent():Update()
+function SaleMessageTypeTemplateMixin:GetRowHeight()
+	return self.saleButtonHeight
 end
 
 function SaleMessageTypeTemplateMixin:GetRowData(index)

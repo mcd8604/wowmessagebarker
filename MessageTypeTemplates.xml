@@ -101,7 +101,9 @@
 				</Layers>
 				<Scripts>
 					<OnVerticalScroll>
-						self:GetParent():OnVerticalScroll(offset)
+						FauxScrollFrame_OnVerticalScroll(self, offset, self:GetParent():GetRowHeight(), function() 
+							self:GetParent():Update()
+						end);
 					</OnVerticalScroll>
 				</Scripts>
 			</ScrollFrame>
