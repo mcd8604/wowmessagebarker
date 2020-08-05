@@ -26,18 +26,41 @@ end
 SaleMessageTypeTemplateMixin = {}
 
 function SaleMessageTypeTemplateMixin:Load()
-	--self.SaleScrollFrame.ScrollBar.doNotHide = true;
-	-- NOTE: button height needs to match SaleButtonTemplate.. REEEE
-	-- Can this be found dynamically intsead of hardcoding?
-	self.saleButtonHeight = 37
-	local ResetItemRow = function(pool, itemRow)
-		itemRow.Item.IconTexture:Hide()
-		itemRow.Name:SetText('')
-		itemRow.Price:SetText('')
-		itemRow:Hide()
-		itemRow:ClearAllPoints()
+	self:LoadButtonRows()
+	self.SaleScrollFrame.scrollBarHideable = 1;
+	ScrollFrame_OnLoad(self.SaleScrollFrame);
+	ScrollFrame_OnScrollRangeChanged(self.SaleScrollFrame);
+end
+
+function SaleMessageTypeTemplateMixin:LoadButtonRows()
+	self.buttonNamePrefix = (self:GetName() or "SaleMessageFrame").."SaleButton"
+	self.buttonRows = { self:CreateRow(1) }
+	self.saleButtonHeight = self.buttonRows[1]:GetHeight()
+	self.buttonRows[1]:SetPoint("TOPLEFT", self.SaleScrollFrame);
+	self:LoadButtonSizes()
+	for i = 2, self.maxNumButtonsVisible do
+		local row = self:CreateRow(i)
+		row:SetPoint("TOPLEFT", self.buttonRows[i-1], "BOTTOMLEFT", 0, -self.saleButtonSpacing);
+		table.insert(self.buttonRows, row)
 	end
-	self.itemRowPool = CreateFramePool("Button", self.SaleScrollFrame.ScrollChildFrame, "SaleButtonTemplate", ResetItemRow);
+end
+
+function SaleMessageTypeTemplateMixin:CreateRow(i)
+	local name = format("%s%i", self.buttonNamePrefix, i)
+	local row = CreateFrame("Button", name, self, "SaleButtonTemplate");
+	row:SetPoint("RIGHT", self.SaleScrollFrame);
+	return row
+end
+
+function SaleMessageTypeTemplateMixin:LoadButtonSizes()
+	-- TODO move button spacing to keyvalue xml?
+	self.saleButtonSpacing = 2
+	local totalButtonHeight = (self.saleButtonHeight + self.saleButtonSpacing)
+	self.maxNumButtonsVisible = 1
+	if totalButtonHeight ~= 0 then
+		self.SaleScrollFrame.ScrollBar.scrollStep = totalButtonHeight;
+		self.maxNumButtonsVisible = floor(self.SaleScrollFrame:GetHeight() / totalButtonHeight)
+	end
 end
 
 function SaleMessageTypeTemplateMixin:SetMessage(message)
@@ -53,27 +76,48 @@ function SaleScrollFrame_Update(self)
 	self:GetParent():Update()
 end
 
-function SaleMessageTypeTemplateMixin:Update()
-	self.itemRowPool:ReleaseAll();
-	self.itemRows = {}
-	self.previousItemRow = nil;
-	local numItems = #self.message.content.items + 1
-	for i, item in ipairs(self.message.content.items) do
-		local itemRow = self:CreateItemRow(item)
-		table.insert(self.itemRows, itemRow)
-	end
-	-- Empty row for creating a new item
-	local itemRow = self:CreateItemRow()
-	table.insert(self.itemRows, itemRow)
-	local numItemsRequiredToEnableDisplay = 0
-	FauxScrollFrame_Update(self.SaleScrollFrame, numItems, numItemsRequiredToEnableDisplay, self.saleButtonHeight);
+function SaleMessageTypeTemplateMixin:GetRowData(index)
+	return self.message.content.items[index]
 end
 
-function SaleMessageTypeTemplateMixin:CreateItemRow(item)
-	local row = self.itemRowPool:Acquire()
-	self:AnchorItemRow(row)
+function SaleMessageTypeTemplateMixin:GetNumItems()
+	-- Add 1 to display an empty row for creating a new item
+	return #self.message.content.items + 1
+end
+
+function SaleMessageTypeTemplateMixin:Update()
+	local numItems = self:GetNumItems()
+	self.offset = self.offset or 0 -- offset is the (0-based) index of the first visible item
+	-- iterate the row buttons and update the data and visibility
+	for i = 1, self.maxNumButtonsVisible do
+		local index = self.offset + i
+		local row = self.buttonRows[i]
+		if index <= numItems then
+			self:SetRowData(row, self:GetRowData(index))
+			row:Show() 
+		else
+			self:ResetItemRow(row)
+			row:Hide()
+		end
+	end
+	-- TODO check if bottom row is visible
+	--self:SetItemData()
+	local smallWidth = 200
+	local bigWidth = 220
+	FauxScrollFrame_Update(self.SaleScrollFrame, numItems, self.maxNumButtonsVisible, self.saleButtonHeight, self.buttonNamePrefix, smallWidth, bigWidth)
+	--FauxScrollFrame_Update(self.SaleScrollFrame, numItems, self.maxNumButtonsVisible, self.saleButtonHeight);
+end
+
+function SaleMessageTypeTemplateMixin:ResetItemRow(row)
+	row.itemData = nil
+	row.Item.IconTexture:Hide()
+	row.Name:SetText("Place item to add")
+	row.Price:SetText('')
+end
+
+function SaleMessageTypeTemplateMixin:SetRowData(row, item)
 	if item then
-		row.item = item
+		row.itemData = item
 		if item.icon then
 			row.Item.IconTexture:SetTexture(item.icon)
 			row.Item.IconTexture:Show()
@@ -81,34 +125,20 @@ function SaleMessageTypeTemplateMixin:CreateItemRow(item)
 		row.Name:SetText(item.name)
 		row.Price:SetText(item.price)
 	else
-		row.Name:SetText("Place item to add")
+		-- Empty row for creating a new item
+		self:ResetItemRow(row)
 	end
-	row:Show()
-	return row
-end
-
-function SaleMessageTypeTemplateMixin:AnchorItemRow(row)
-	if self.previousItemRow then
-		row:SetPoint("TOPLEFT", self.previousItemRow, "BOTTOMLEFT", 0, -2);
-	else
-		row:SetPoint("TOPLEFT", self.SaleScrollFrame.ScrollChildFrame, "TOPLEFT");
-	end
-	row:SetPoint("RIGHT", self.SaleScrollFrame, "RIGHT");
-	row.Price:SetPoint("LEFT", row.Name, "RIGHT")
-	--row.Highlight:SetPoint("RIGHT", row, "RIGHT")
-	self.previousItemRow = row;
 end
 
 SaleButtonTemplateMixin = {}
 
 function SaleButtonTemplateMixin:OnClick()
 	local objectType, itemId, itemLink = GetCursorInfo()
-	if objectType == "item" and not self.item then
+	print(self:GetName())
+	if objectType == "item" and not self.itemData then
 		ClearCursor()
 		-- TODO should probably replace this with event pattern
-		local scrollChildFrame = self:GetParent()
-		local saleScrollFrame = scrollChildFrame:GetParent()
-		local saleMessageTypeTemplate = saleScrollFrame:GetParent()
+		local saleMessageTypeTemplate = self:GetParent()
 		table.insert(saleMessageTypeTemplate.message.content.items, MessageFactory:CreateItemContent(itemId, itemLink))
 		saleMessageTypeTemplate:Update()
 	end

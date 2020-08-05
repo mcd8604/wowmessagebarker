@@ -79,7 +79,7 @@
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentPrefixEditBox" y="-2"/>
 					<Anchor point="LEFT"  x="7" />
 					<Anchor point="RIGHT" x="-27"/>
-					<Anchor point="BOTTOM" />
+					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentSuffixEditBox" y="2" />
 				</Anchors>
 				<Layers>
 					<Layer level="ARTWORK">
@@ -100,12 +100,6 @@
 					</Layer>
 				</Layers>
 				<Scripts>
-					<!-- <OnLoad>
-						self.scrollBarHideable = 1;
-						self.ScrollBar.scrollStep = 24;
-						ScrollFrame_OnLoad(self);
-						ScrollFrame_OnScrollRangeChanged(self);
-					</OnLoad> -->
 					<OnVerticalScroll>
 						self:GetParent():OnVerticalScroll()
 					</OnVerticalScroll>
@@ -297,6 +291,7 @@
 						<AbsDimension x="33" y="0"/>
 					</Offset>
 				</Anchor>
+				<Anchor point="RIGHT" />
 			</Anchors>
 			<TexCoords left="0" right="1.0" top="0" bottom="0.578125"/>
 		</HighlightTexture>
