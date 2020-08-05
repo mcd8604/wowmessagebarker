@@ -16,3 +16,10 @@ function SaleButtonTemplateMixin:OnPriceChanged(userInput)
 		self.itemData.price = self.Price:GetText()
 	end
 end
+
+function SaleButtonTemplateMixin:DeleteButtonClicked()
+	-- TODO should probably replace this with event pattern
+	local saleMessageTemplate = self:GetParent()
+	tDeleteItem(saleMessageTemplate.message.content.items, self.itemData)
+	saleMessageTemplate:Update()
+end

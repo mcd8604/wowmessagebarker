@@ -169,6 +169,16 @@
 					</OnTextChanged>
 				</Scripts>
 			</EditBox>
+			<Button name="$parentDeleteButton" inherits="UIPanelCloseButton" parentKey="DeleteButton">
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPrice" x="7"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						self:GetParent():DeleteButtonClicked()
+					</OnClick>
+				</Scripts>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnClick method="OnClick">
