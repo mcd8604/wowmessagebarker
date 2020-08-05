@@ -17,13 +17,13 @@ function MessageEditorMixin:Load()
 	self:AddEvent("CHANNEL_UI_UPDATE")
 end
 
--- NOTE: Message type templates should follow the naming convention: "<MessageType>MessageTypeTemplate"
+-- NOTE: Message type templates should follow the naming convention: "<MessageType>MessageTemplate"
 function MessageEditorMixin:LoadMessageTypeFrames()
 	self.messageTypeFrames = {}
 	for messageType, i in pairs(MessageBarker_MessageTypes) do		
 		local key = messageType.."ContentFrame"
 		local frameName = (self:GetName() or '')..key
-		local templateName = messageType.."MessageTypeTemplate"
+		local templateName = messageType.."MessageTemplate"
 		local frame = CreateFrame("Frame", frameName, self, templateName)
 		self[key] = frame
 		-- TODO move to OnLoad?

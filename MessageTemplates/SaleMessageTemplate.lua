@@ -1,38 +1,13 @@
-MessageTypeTemplateMixin = {}
+SaleMessageTemplateMixin = {}
 
-function MessageTypeTemplateMixin:Load() end
-
-function MessageTypeTemplateMixin:SetMessage(message)
-	assert(message)
-	self.message = message
-end
-
-BasicMessageTypeTemplateMixin = {}
-
-function BasicMessageTypeTemplateMixin:Load() end
-
-function BasicMessageTypeTemplateMixin:SetMessage(message)
-	MessageTypeTemplateMixin.SetMessage(self, message)
-	-- TODO test moving the anchors to Load
-	self.MessageScrollFrame.MessageEditBox:SetPoint("LEFT")
-	self.MessageScrollFrame.MessageEditBox:SetPoint("RIGHT")
-	self.MessageScrollFrame.MessageEditBox:SetText(message.content or '')
-end
-
-function BasicMessageTypeTemplateMixin:OnTextChanged()
-	self.message.content = self.MessageScrollFrame.MessageEditBox:GetText()
-end
-
-SaleMessageTypeTemplateMixin = {}
-
-function SaleMessageTypeTemplateMixin:Load()
+function SaleMessageTemplateMixin:Load()
 	self:LoadButtonRows()
 	self.SaleScrollFrame.scrollBarHideable = 1;
 	ScrollFrame_OnLoad(self.SaleScrollFrame);
 	ScrollFrame_OnScrollRangeChanged(self.SaleScrollFrame);
 end
 
-function SaleMessageTypeTemplateMixin:LoadButtonRows()
+function SaleMessageTemplateMixin:LoadButtonRows()
 	self.buttonNamePrefix = (self:GetName() or "SaleMessageFrame").."SaleButton"
 	self.buttonRows = { self:CreateRow(1) }
 	self.saleButtonHeight = self.buttonRows[1]:GetHeight()
@@ -45,14 +20,14 @@ function SaleMessageTypeTemplateMixin:LoadButtonRows()
 	end
 end
 
-function SaleMessageTypeTemplateMixin:CreateRow(i)
+function SaleMessageTemplateMixin:CreateRow(i)
 	local name = format("%s%i", self.buttonNamePrefix, i)
 	local row = CreateFrame("Button", name, self, "SaleButtonTemplate");
 	row:SetPoint("RIGHT", self.SaleScrollFrame);
 	return row
 end
 
-function SaleMessageTypeTemplateMixin:LoadButtonSizes()
+function SaleMessageTemplateMixin:LoadButtonSizes()
 	-- TODO move button spacing to keyvalue xml?
 	self.saleButtonSpacing = 2
 	local totalButtonHeight = (self.saleButtonHeight + self.saleButtonSpacing)
@@ -63,31 +38,31 @@ function SaleMessageTypeTemplateMixin:LoadButtonSizes()
 	end
 end
 
-function SaleMessageTypeTemplateMixin:SetMessage(message)
-	MessageTypeTemplateMixin.SetMessage(self, message)
+function SaleMessageTemplateMixin:SetMessage(message)
+	MessageTemplateMixin.SetMessage(self, message)
 	self.PrefixEditBox:SetText(self.message.content.prefix)
 	self.SuffixEditBox:SetText(self.message.content.suffix)
 	self:Update()
 end
 
-function SaleMessageTypeTemplateMixin:OnVerticalScroll(offset)
+function SaleMessageTemplateMixin:OnVerticalScroll(offset)
 	
 end
 
-function SaleMessageTypeTemplateMixin:GetRowHeight()
+function SaleMessageTemplateMixin:GetRowHeight()
 	return self.saleButtonHeight
 end
 
-function SaleMessageTypeTemplateMixin:GetRowData(index)
+function SaleMessageTemplateMixin:GetRowData(index)
 	return self.message.content.items[index]
 end
 
-function SaleMessageTypeTemplateMixin:GetNumItems()
+function SaleMessageTemplateMixin:GetNumItems()
 	-- Add 1 to display an empty row for creating a new item
 	return #self.message.content.items + 1
 end
 
-function SaleMessageTypeTemplateMixin:Update()
+function SaleMessageTemplateMixin:Update()
 	local numItems = self:GetNumItems()
 	-- iterate the row buttons and update the data and visibility
 	for i = 1, self.maxNumButtonsVisible do
@@ -108,14 +83,14 @@ function SaleMessageTypeTemplateMixin:Update()
 	FauxScrollFrame_Update(self.SaleScrollFrame, numItems, self.maxNumButtonsVisible, self.saleButtonHeight, self.buttonNamePrefix, smallWidth, bigWidth)
 end
 
-function SaleMessageTypeTemplateMixin:ResetItemRow(row)
+function SaleMessageTemplateMixin:ResetItemRow(row)
 	row.itemData = nil
 	row.Item.IconTexture:Hide()
 	row.Name:SetText("Place item to add")
 	row.Price:SetText('')
 end
 
-function SaleMessageTypeTemplateMixin:SetRowData(row, item)
+function SaleMessageTemplateMixin:SetRowData(row, item)
 	if item then
 		row.itemData = item
 		if item.icon then
@@ -127,24 +102,5 @@ function SaleMessageTypeTemplateMixin:SetRowData(row, item)
 	else
 		-- Empty row for creating a new item
 		self:ResetItemRow(row)
-	end
-end
-
-SaleButtonTemplateMixin = {}
-
-function SaleButtonTemplateMixin:OnClick()
-	local objectType, itemId, itemLink = GetCursorInfo()
-	if objectType == "item" and not self.itemData then
-		ClearCursor()
-		-- TODO should probably replace this with event pattern
-		local saleMessageTypeTemplate = self:GetParent()
-		table.insert(saleMessageTypeTemplate.message.content.items, MessageFactory:CreateItemContent(itemId, itemLink))
-		saleMessageTypeTemplate:Update()
-	end
-end
-
-function SaleButtonTemplateMixin:OnPriceChanged(userInput)
-	if userInput then
-		self.itemData.price = self.Price:GetText()
 	end
 end

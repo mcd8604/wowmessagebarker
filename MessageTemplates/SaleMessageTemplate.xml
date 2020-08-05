@@ -1,0 +1,85 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="MessageTemplates/SaleMessageTemplate.lua"/>
+	<Include file="MessageTemplates/SaleButtonTemplate.xml"/>>
+	<Frame name="SaleMessageTemplate" inherits="MessageTemplate" virtual="true" mixin="SaleMessageTemplateMixin">
+		<Layers>
+			<Layer level="BORDER">
+				<FontString name="$parentPrefixFontString" inherits="GameFontNormalLeft" text="Prefix:">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="7" y="-11"/>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentSuffixFontString" inherits="GameFontNormalLeft" text="Suffix:">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" x="7" y="11"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox name="$parentPrefixEditBox" parentKey="PrefixEditBox" inherits="InputBoxTemplate" autoFocus="false">
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPrefixFontString" x="5"/>
+					<Anchor point="RIGHT" x="-5"/>
+				</Anchors>
+				<Size y="22"/>
+				<Scripts>
+					<OnTextChanged>
+						if userInput then
+							self:GetParent().message.content.prefix = self:GetText()
+						end
+					</OnTextChanged>
+				</Scripts>
+			</EditBox>
+			<EditBox name="$parentSuffixEditBox" parentKey="SuffixEditBox" inherits="InputBoxTemplate" autoFocus="false">
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentSuffixFontString" x="5"/>
+					<Anchor point="RIGHT" x="-5"/>
+				</Anchors>
+				<Size x="100" y="22"/>
+				<Scripts>
+					<OnTextChanged>
+						if userInput then
+							self:GetParent().message.content.suffix = self:GetText()
+						end
+					</OnTextChanged>
+				</Scripts>
+			</EditBox>
+			<ScrollFrame name="$parentSaleScrollFrame" parentKey="SaleScrollFrame" inherits="FauxScrollFrameTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentPrefixEditBox" y="-2"/>
+					<Anchor point="LEFT"  x="7" />
+					<Anchor point="RIGHT" x="-27"/>
+					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentSuffixEditBox" y="2" />
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+							<Size x="31" y="256"/>
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-2" y="5"/>
+							</Anchors>
+							<TexCoords left="0" right="0.484375" top="0" bottom="1.0"/>
+						</Texture>
+						<Texture file="Interface\PaperDollInfoFrame\UI-Character-ScrollBar">
+							<Size x="31" y="106"/>
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-2" y="-2"/>
+							</Anchors>
+							<TexCoords left="0.515625" right="1.0" top="0" bottom="0.4140625"/>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnScrollRangeChanged function="ScrollFrame_OnScrollRangeChanged"/>
+					<OnVerticalScroll>
+						FauxScrollFrame_OnVerticalScroll(self, offset, self:GetParent():GetRowHeight(), function() 
+							self:GetParent():Update()
+						end);
+					</OnVerticalScroll>
+				</Scripts>
+			</ScrollFrame>
+		</Frames>
+	</Frame>
+</Ui>

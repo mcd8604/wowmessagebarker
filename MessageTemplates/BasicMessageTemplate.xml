@@ -1,0 +1,34 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="MessageTemplates/BasicMessageTemplate.lua"/>
+	<Frame name="BasicMessageTemplate" inherits="MessageTemplate" virtual="true" mixin="BasicMessageTemplateMixin">
+		<Size y="85"/>
+		<Frames>
+			<ScrollFrame name="$parentMessageScrollFrame" parentKey="MessageScrollFrame" inherits="UIPanelScrollFrameTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="5" y="-5"/>
+					<Anchor point="RIGHT" x="-27"/>
+				</Anchors>
+				<ScrollChild>
+					<EditBox name="$parentMessageEditBox" parentKey="MessageEditBox" multiLine="true" autoFocus="false">
+						<Scripts>
+							<OnLoad>
+								ScrollingEdit_OnCursorChanged(self, 0, 0, 0, 0);
+							</OnLoad>
+							<OnTextChanged>
+								self:GetParent():GetParent():OnTextChanged()
+								ScrollingEdit_OnTextChanged(self, self:GetParent());
+							</OnTextChanged>
+							<OnCursorChanged function="ScrollingEdit_OnCursorChanged"/>
+							<OnUpdate>
+								ScrollingEdit_OnUpdate(self, elapsed, self:GetParent());
+							</OnUpdate>
+							<OnEscapePressed function="EditBox_ClearFocus"/>
+						</Scripts>
+						<FontString inherits="GameFontHighlight"/>
+					</EditBox>
+				</ScrollChild>
+			</ScrollFrame>
+		</Frames>
+	</Frame>
+</Ui>

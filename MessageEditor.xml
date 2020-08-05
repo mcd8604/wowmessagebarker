@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Script file="MessageEditor.lua"/>
-	<Include file="MessageTypeTemplates.xml" />
+	<Include file="MessageTemplates/MessageTemplates.xml" />
 <!-- 	<ScrollFrame name="MessageEditorTemplate" mixin="MessageEditorMixin" inherits="UIPanelScrollFrameCodeTemplate" virtual="true">
 		<Frames>
 			<Slider parentKey="ScrollBar" inherits="UIPanelStretchableArtScrollBarTemplate">
