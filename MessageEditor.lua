@@ -1,6 +1,7 @@
 MessageEditorMixin = CreateFromMixins(CallbackRegistryBaseMixin, EventRegistrationHelper);
 MessageEditorEvent = {
 	MessageChanged = 1,
+	BindingChanged = 2,
 }
 
 function MessageEditorMixin:Load()
@@ -15,6 +16,7 @@ function MessageEditorMixin:Load()
 	self.outputSelectorPool = CreateFramePool("CheckButton", self.OutputSelectFrame, "ChatConfigCheckButtonTemplate", ResetCheckButton);
 	self.outputSelectors = {}
 	self:AddEvent("CHANNEL_UI_UPDATE")
+	self:CreateBindingButton()
 end
 
 -- NOTE: Message type templates should follow the naming convention: "<MessageType>MessageTemplate"
@@ -37,6 +39,53 @@ function MessageEditorMixin:LoadMessageTypeFrames()
 	end
 end
 
+function MessageEditorMixin:CreateBindingButton()
+	local bindingType = { Name = "MessageBarkerBinding", Type = "CustomBindingType", EnumValue = 1 }
+	local handler = CustomBindingHandler:CreateHandler(bindingType);
+
+	handler:SetOnBindingModeActivatedCallback(function(isActive)
+		if isActive then
+			--KeyBindingFrame.buttonPressed = button;
+			--KeyBindingFrame_SetSelected("TOGGLE_VOICE_PUSH_TO_TALK", button);
+			--KeyBindingFrame_UpdateUnbindKey();
+			--KeyBindingFrame.outputText:SetFormattedText(BIND_KEY_TO_COMMAND, GetBindingName("TOGGLE_VOICE_PUSH_TO_TALK"));
+		end
+	end);
+
+	handler:SetOnBindingCompletedCallback(function(completedSuccessfully, keys)
+		if keys and #keys > 0 then
+			local key = keys[1]
+			for i = 2, #keys do
+				key = key .. '-' .. keys[i]
+			end
+			self:TriggerEvent(MessageEditorEvent.BindingChanged, key)
+			--local ok = SetBindingClick(key, self.RunButton:GetName());
+			--print(GetBindingByKey(key))
+			--self.message.keybind = key
+			-- TODO on message delete, remove binding
+		else
+			-- TODO clear binding text
+		end
+		--KeyBindingFrame_SetSelected(nil);
+
+		--if completedSuccessfully then
+		--	KeyBindingFrame.outputText:SetText(KEY_BOUND);
+		--else
+		--	KeyBindingFrame.outputText:SetText("");
+		--end
+
+		--if completedSuccessfully and keys then
+		--	DisplayUniversalAccessDialogIfRequiredForVoiceChatKeybind(keys);
+		--end
+	end);
+	self.BindingButton = CustomBindingManager:RegisterHandlerAndCreateButton(handler, "CustomBindingButtonTemplateWithLabel", self)
+	self.BindingButton:SetWidth(120)
+	self.BindingButton.selectedHighlight:SetWidth(120)
+	self.BindingButton:SetHeight(22);
+	self.BindingButton:SetPoint("TOPRIGHT");
+	self.BindingButton:Show();
+end
+
 function MessageEditorMixin:SetMessage(message)
 	self.currentMessage = message
 	if self.currentMessage then
@@ -46,6 +95,7 @@ function MessageEditorMixin:SetMessage(message)
 		end
 		self.currentMessageTypeString = MessageBarker:GetMessageTypeString(self.currentMessage.type)
 		self.MessageTypeFontStringValue:SetText(self.currentMessageTypeString)
+		self.BindingButton:SetText(self.currentMessage.keybind or '')
 		self:SetMessageContentFrame()
 		self:SetChatOutputSelectors()
 		self:Show();

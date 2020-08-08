@@ -7,7 +7,8 @@ function MessageBarkerFrameMixin:OnLoad()
 		self:MarkDirty("UpdateAll");
 	end)
 	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageDeleted, function(event, messageId)
-		self:MarkDirty("UpdateAll");
+		--self:MarkDirty("UpdateAll");
+		self.MessageList:DeleteMessageRow(messageId)
 	end)
 	self.MessageList:RegisterCallback(MessageListEvent.RowSelected, function(event, message)
 		self.MessageEditor:SetMessage(message)

@@ -7,68 +7,88 @@ BUTTON_SPACING = 2
 function MessageListMixin:Load()
 	self:OnLoad() -- for CallbackRegistryBaseMixin:OnLoad
 	self.selectedRow = nil;
-	local ResetMessageRow = function(pool, messageRow)
-		messageRow:Reset();
-	end
-	self.messageRowPool = CreateFramePool("Button", self.Child, "MessageRowTemplate", ResetMessageRow);
+	self.messageRows = {};
+	--local ResetMessageRow = function(pool, messageRow)
+	--	messageRow:Reset();
+	--end
+	--self.messageRowPool = CreateFramePool("Button", self.Child, "MessageRowTemplate", ResetMessageRow);
 	self.ScrollBar.Background:Hide();
 	self.ScrollBar.doNotHide = true;
 end
 
 function MessageListMixin:SetMessages(messages)
-	self.messageRowPool:ReleaseAll();
-	self:ResetMessageRowAnchors();
+	--self.messageRowPool:ReleaseAll();
+	--self:ResetMessageRowAnchors();
 	for _, message in pairs(messages) do
-		local messageRow = self:CreateMessageRow(message)
+		local messageRow = self:GetMessageRow(message)
 		if message == self.selectedMessage then
 			self.selectedRow = messageRow
 			self:HighlightRow(self.selectedRow)
 		end
-		table.insert(self.messageRows, messageRow)
 	end
+	table.sort(self.messageRows, function(a, b) return a.message.id < b.message.id end)
+	self:ResetMessageRowAnchors()
 	self:UpdateScrollBar();
 end
 
-function MessageListMixin:ResetMessageRowAnchors()
-	self.previousMessageRow = nil;
-	self.messageRows = {};
+function MessageListMixin:GetMessageRow(message)
+	--local messageRow = self.messageRows[message.id]
+	local rowIndex, messageRow = self:FindMessageRow(message.id)
+	if not rowIndex then
+		messageRow = self:CreateMessageRow(message)
+		table.insert(self.messageRows, messageRow)
+	end
+	messageRow:Setup(message)
+	return messageRow
+end
+
+function MessageListMixin:FindMessageRow(messageId)
+	return FindInTableIf(self.messageRows, function(row) return row.message.id == messageId end)
 end
 
 function MessageListMixin:CreateMessageRow(message)
-	local messageRow = self.messageRowPool:Acquire();
-	self:AnchorMessageRow(messageRow)
-	messageRow:Setup(message)
+	--local messageRow = self.messageRowPool:Acquire();
+	local name = self:GetName().."MessageRow"..message.id
+	local messageRow = CreateFrame("Button", name, self.Child, "MessageRowTemplate")
 	messageRow:SetScript("OnClick", function(editButton, event, ...)
 		self:SetSelectedRow(messageRow);
 	end)
 	return messageRow
 end
 
-function MessageListMixin:AnchorMessageRow(messageRow)
-	if self.previousMessageRow then
-		messageRow:SetPoint("TOPLEFT", self.previousMessageRow, "BOTTOMLEFT", 0, -BUTTON_SPACING);
-	else
-		messageRow:SetPoint("TOPLEFT", self:GetScrollChild(), "TOPLEFT");
+function MessageListMixin:ResetMessageRowAnchors()
+	local previousMessageRow = nil;	
+	for _, messageRow in ipairs(self.messageRows) do
+		messageRow:ClearAllPoints()
 	end
-	self.previousMessageRow = messageRow;
+	for _, messageRow in ipairs(self.messageRows) do
+		if previousMessageRow then
+			messageRow:SetPoint("TOPLEFT", previousMessageRow, "BOTTOMLEFT", 0, -BUTTON_SPACING);
+		else
+			messageRow:SetPoint("TOPLEFT");
+		end
+		previousMessageRow = messageRow;
+	end
 end
 
 function MessageListMixin:SetSelectedRow(row)
+	self:UnhighlightAllRows()
 	if not self:IsSelectedRow(row) then
-		-- un-highlights previously selected row
-		--[[ if self.selectedRow ~= nil then
-			self.selectedRow:SetHighlightAtlas("voicechat-channellist-row-highlight");
-			self.selectedRow:UnlockHighlight()
-		end ]]
-		-- un-highlight all rows
-		for i, r in ipairs(self.messageRows) do
-			r:SetHighlightAtlas("voicechat-channellist-row-highlight");
-			r:UnlockHighlight()
-		end
 		self.selectedRow = row
-		self.selectedMessage = row.message
-		self:HighlightRow(self.selectedRow)
-		self:TriggerEvent(MessageListEvent.RowSelected, row.message)
+		if self.selectedRow then
+			self.selectedMessage = row.message
+			self:HighlightRow(self.selectedRow)
+			self:TriggerEvent(MessageListEvent.RowSelected, row.message)
+		else
+			self:TriggerEvent(MessageListEvent.RowSelected)
+		end
+	end
+end
+
+function MessageListMixin:UnhighlightAllRows()
+	for _, r in ipairs(self.messageRows) do
+		r:SetHighlightAtlas("voicechat-channellist-row-highlight");
+		r:UnlockHighlight()
 	end
 end
 
@@ -103,4 +123,22 @@ function MessageListMixin:GetScrollFrameHeight()
 	end
 	local totalButtonSpacing = BUTTON_SPACING * (#self.messageRows - 1)
 	return totalButtonHeight + totalButtonSpacing
+end
+
+function MessageListMixin:DeleteMessageRow(messageId)
+	local rowIndex, messageRow = self:FindMessageRow(messageId)
+	if rowIndex then
+		if self:IsSelectedRow(messageRow) then
+			self:SetSelectedRow()
+		end
+		table.remove(self.messageRows, rowIndex)
+		--local name = messageRow:GetName()
+		--if name and _G[name] then
+		--	_G[name] = nil
+		--end
+		-- This frame will never actually be removed, so hide it
+		messageRow:Hide()
+		-- TODO delete keybind
+		self:ResetMessageRowAnchors()
+	end
 end

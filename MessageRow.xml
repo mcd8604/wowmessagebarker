@@ -30,14 +30,21 @@
 					</Anchors>
 					<Color r="0.486" g="0.518" b="0.541" />
 				</FontString>
+				<FontString name="$parentKeyBind" inherits="FriendsFont_Small" justifyH="RIGHT" parentKey="keybind">
+					<Size x="260" y="10"/>
+					<Anchors>
+						<!-- <Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="BOTTOMLEFT" x="0" y="-3"/> -->
+						<Anchor point="BOTTOMRIGHT" />
+					</Anchors>
+					<Color r="0.486" g="0.518" b="0.541" />
+				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button parentKey="RunButton" inherits="UIPanelButtonTemplate" text="Run">
-				<Size x="40" y="20"/>
+			<Button parentKey="RunButton" name="$parentRunButton" inherits="UIPanelButtonTemplate" text="Run">
+				<Size x="40" y="22"/>
 				<Anchors>
 					<Anchor point="TOPRIGHT"/>
-					<Anchor point="BOTTOMRIGHT"/>
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -47,9 +54,7 @@
 			</Button>
 		</Frames>
 		<Scripts>
-			<OnLoad>
-				self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-			</OnLoad>
+			<OnLoad method="OnLoad"/>
 			<OnClick method="OnClick"/>
 		</Scripts>
 		<NormalTexture parentKey="NormalTexture" atlas="voicechat-channellist-row-background" alphaMode="ADD"/>

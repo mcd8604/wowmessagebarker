@@ -3,6 +3,7 @@ MessageRowMixin = {}
 function MessageRowMixin:Setup(message)
 	self.message = message
 	if self.message then
+		self:SetID(message.id)
 		if self.message.name then
 			local nameText = format("%s (%s)", self.message.name, self.message.id)
 			self.name:SetText(nameText);
@@ -11,6 +12,12 @@ function MessageRowMixin:Setup(message)
 			local typeStr = MessageBarker:GetMessageTypeString(self.message.type)
 			self.info:SetText(typeStr);
 		end
+		--key1, key2 = GetBindingKey(command)
+		--if self.message.keybind then
+		--	local ok = SetBindingClick(self.message.keybind, self.RunButton:GetName());
+			--print(GetBindingByKey(self.message.keybind))
+		--	self.keybind:SetText(self.message.keybind)
+		--end
 	else
 		self:ResetDisplay()
 	end
