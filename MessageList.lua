@@ -8,17 +8,11 @@ function MessageListMixin:Load()
 	self:OnLoad() -- for CallbackRegistryBaseMixin:OnLoad
 	self.selectedRow = nil;
 	self.messageRows = {};
-	--local ResetMessageRow = function(pool, messageRow)
-	--	messageRow:Reset();
-	--end
-	--self.messageRowPool = CreateFramePool("Button", self.Child, "MessageRowTemplate", ResetMessageRow);
 	self.ScrollBar.Background:Hide();
 	self.ScrollBar.doNotHide = true;
 end
 
 function MessageListMixin:SetMessages(messages)
-	--self.messageRowPool:ReleaseAll();
-	--self:ResetMessageRowAnchors();
 	for _, message in pairs(messages) do
 		local messageRow = self:GetMessageRow(message)
 		if message == self.selectedMessage then
@@ -32,7 +26,6 @@ function MessageListMixin:SetMessages(messages)
 end
 
 function MessageListMixin:GetMessageRow(message)
-	--local messageRow = self.messageRows[message.id]
 	local rowIndex, messageRow = self:FindMessageRow(message.id)
 	if not rowIndex then
 		messageRow = self:CreateMessageRow(message)
@@ -47,7 +40,6 @@ function MessageListMixin:FindMessageRow(messageId)
 end
 
 function MessageListMixin:CreateMessageRow(message)
-	--local messageRow = self.messageRowPool:Acquire();
 	local name = self:GetName().."MessageRow"..message.id
 	local messageRow = CreateFrame("Button", name, self.Child, "MessageRowTemplate")
 	messageRow:SetScript("OnClick", function(editButton, event, ...)
@@ -102,11 +94,6 @@ function MessageListMixin:IsSelectedRow(row)
 end
 
 function MessageListMixin:GetSelectedMessage()
---[[ 	local selectedMessage = nil
-	if self.selectedRow then
-		selectedMessage = self.selectedRow.message
-	end
-	return selectedMessage ]]
 	return self.selectedMessage
 end
 
