@@ -58,6 +58,7 @@ function MessageEditorMixin:CreateBindingButton()
 			for i = 2, #keys do
 				key = key .. '-' .. keys[i]
 			end
+			-- TODO handle generalizing LEFT/RIGHT modifiers into single modifiers
 			self:TriggerEvent(MessageEditorEvent.BindingChanged, self.currentMessage, key)
 			--local ok = SetBindingClick(key, self.RunButton:GetName());
 			--print(GetBindingByKey(key))
@@ -108,8 +109,8 @@ function MessageEditorMixin:SetKeyBindings(keyBindings)
 	self.keyBindings = keyBindings
 	local keyBindingsText = ''
 	if keyBindings then
-		-- TODO figure out how to display multiple bindings?
-		keyBindingsText = keyBindings[1]
+		-- TODO display additional bindings (in tooltip?)
+		keyBindingsText = keyBindings
 	end
 	self.BindingButton:SetText(keyBindingsText)
 end

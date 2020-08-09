@@ -12,12 +12,6 @@ function MessageRowMixin:Setup(message)
 			local typeStr = MessageBarker:GetMessageTypeString(self.message.type)
 			self.info:SetText(typeStr);
 		end
-		--key1, key2 = GetBindingKey(command)
-		--if self.message.keybind then
-		--	local ok = SetBindingClick(self.message.keybind, self.RunButton:GetName());
-			--print(GetBindingByKey(self.message.keybind))
-		--	self.keybind:SetText(self.message.keybind)
-		--end
 		self:GetKeyBindings()
 	else
 		self:ResetDisplay()
@@ -26,10 +20,11 @@ function MessageRowMixin:Setup(message)
 end
 
 function MessageRowMixin:GetKeyBindings()
-	local command = "CLICK "..self.RunButton:GetName()
+	local command = "CLICK "..self.RunButton:GetName()..":LeftButton"
 	self.keyBindings = GetBindingKey(command)
 	if self.keyBindings then
-		self.keybind:SetText(self.keyBindings[1])
+		self.keybind:SetText(self.keyBindings)
+		-- TODO display additional bindings (in tooltip?)
 	else
 		self.keybind:SetText('')
 	end
