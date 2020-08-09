@@ -18,19 +18,30 @@ function MessageRowMixin:Setup(message)
 			--print(GetBindingByKey(self.message.keybind))
 		--	self.keybind:SetText(self.message.keybind)
 		--end
+		self:GetKeyBindings()
 	else
 		self:ResetDisplay()
 	end
 	self:Show();
 end
 
-function MessageRowMixin:Reset()
+function MessageRowMixin:GetKeyBindings()
+	local command = "CLICK "..self.RunButton:GetName()
+	self.keyBindings = GetBindingKey(command)
+	if self.keyBindings then
+		self.keybind:SetText(self.keyBindings[1])
+	else
+		self.keybind:SetText('')
+	end
+end
+
+--[[ function MessageRowMixin:Reset()
 	self:ResetDisplay()
 	self:Hide();
 	self:SetHighlightAtlas("voicechat-channellist-row-highlight");	
 	self:UnlockHighlight()
 	self:Enable();
-end
+end ]]
 
 function MessageRowMixin:ResetDisplay()
 	self.name:SetText('');

@@ -70,7 +70,7 @@ function MessageListMixin:SetSelectedRow(row)
 		if self.selectedRow then
 			self.selectedMessage = row.message
 			self:HighlightRow(self.selectedRow)
-			self:TriggerEvent(MessageListEvent.RowSelected, row.message)
+			self:TriggerEvent(MessageListEvent.RowSelected, row.message, row.keyBindings)
 		else
 			self:TriggerEvent(MessageListEvent.RowSelected)
 		end

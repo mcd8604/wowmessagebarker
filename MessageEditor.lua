@@ -58,7 +58,7 @@ function MessageEditorMixin:CreateBindingButton()
 			for i = 2, #keys do
 				key = key .. '-' .. keys[i]
 			end
-			self:TriggerEvent(MessageEditorEvent.BindingChanged, key)
+			self:TriggerEvent(MessageEditorEvent.BindingChanged, self.currentMessage, key)
 			--local ok = SetBindingClick(key, self.RunButton:GetName());
 			--print(GetBindingByKey(key))
 			--self.message.keybind = key
@@ -86,7 +86,7 @@ function MessageEditorMixin:CreateBindingButton()
 	self.BindingButton:Show();
 end
 
-function MessageEditorMixin:SetMessage(message)
+function MessageEditorMixin:SetMessage(message, keyBindings)
 	self.currentMessage = message
 	if self.currentMessage then
 		self.NameEditBox:SetText(self.currentMessage.name or '')
@@ -95,13 +95,23 @@ function MessageEditorMixin:SetMessage(message)
 		end
 		self.currentMessageTypeString = MessageBarker:GetMessageTypeString(self.currentMessage.type)
 		self.MessageTypeFontStringValue:SetText(self.currentMessageTypeString)
-		self.BindingButton:SetText(self.currentMessage.keybind or '')
+		self:SetKeyBindings(keyBindings)
 		self:SetMessageContentFrame()
 		self:SetChatOutputSelectors()
 		self:Show();
 	else 
 		self:Hide()
 	end
+end
+
+function MessageEditorMixin:SetKeyBindings(keyBindings)
+	self.keyBindings = keyBindings
+	local keyBindingsText = ''
+	if keyBindings then
+		-- TODO figure out how to display multiple bindings?
+		keyBindingsText = keyBindings[1]
+	end
+	self.BindingButton:SetText(keyBindingsText)
 end
 
 function MessageEditorMixin:SetMessageContentFrame()

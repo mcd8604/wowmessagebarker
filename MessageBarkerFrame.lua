@@ -10,12 +10,21 @@ function MessageBarkerFrameMixin:OnLoad()
 		--self:MarkDirty("UpdateAll");
 		self.MessageList:DeleteMessageRow(messageId)
 	end)
-	self.MessageList:RegisterCallback(MessageListEvent.RowSelected, function(event, message)
-		self.MessageEditor:SetMessage(message)
+	self.MessageList:RegisterCallback(MessageListEvent.RowSelected, function(event, message, keyBindings)
+		self.MessageEditor:SetMessage(message, keyBindings)
 		--self:MarkDirty("UpdateAll");
 	end)
-	self.MessageEditor:RegisterCallback(MessageEditorEvent.MessageChanged, function(event, message)		
+	self.MessageEditor:RegisterCallback(MessageEditorEvent.MessageChanged, function(event, message)
 		self:MarkDirty("UpdateAll");
+	end)
+	self.MessageEditor:RegisterCallback(MessageEditorEvent.BindingChanged, function(event, message, key)
+		if self.MessageList.selectedMessage == message then
+			local buttonName = self.MessageList.selectedRow.RunButton:GetName()
+			print(key, buttonName)
+			local ok = SetBindingClick(key, buttonName);
+			print(ok)
+			self.MessageList.selectedRow:GetKeyBindings()
+		end
 	end)
 	self.MessageList:SetMessages(MessageBarker:GetMessages());
 	self:LoadDirtyFlags();
@@ -50,6 +59,7 @@ end
 function MessageBarkerFrameMixin:Update()
 	if self.DirtyFlags:IsDirty() then
 		if self.DirtyFlags:IsDirty(self.DirtyFlags.UpdateMessageList) then
+			-- TODO may need to refactor updates to be more granular, and possibly cache the bindings somewhere
 			self.MessageList:SetMessages(MessageBarker:GetMessages());
 		end
 		--if self.DirtyFlags:IsDirty(self.DirtyFlags.UpdateMessageEditor) then
