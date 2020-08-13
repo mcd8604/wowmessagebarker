@@ -54,11 +54,13 @@ function MessageEditorMixin:CreateBindingButton()
 
 	handler:SetOnBindingCompletedCallback(function(completedSuccessfully, keys)
 		if keys and #keys > 0 then
-			local key = keys[1]
-			for i = 2, #keys do
-				key = key .. '-' .. keys[i]
-			end
-			-- TODO handle generalizing LEFT/RIGHT modifiers into single modifiers
+			for i, k in ipairs(keys) do
+				if IsMetaKey(k) then
+					-- Generalizes LEFT/RIGHT modifiers
+					keys[i] = k:sub(2)
+				end
+			end			
+			local key = table.concat(keys, "-");
 			self:TriggerEvent(MessageEditorEvent.BindingChanged, self.currentMessage, key)
 			--local ok = SetBindingClick(key, self.RunButton:GetName());
 			--print(GetBindingByKey(key))
