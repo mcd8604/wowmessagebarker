@@ -68,6 +68,14 @@
 			<OnShow method="OnShow"/>
 			<OnEvent method="OnEvent"/>
 			<OnUpdate method="OnUpdate"/>
+			<OnDragStart>
+				if not self.isLocked then
+					self:StartMoving()
+				end
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing()
+			</OnDragStop>
 		</Scripts>
 	</Frame>
 </Ui>

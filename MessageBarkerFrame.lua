@@ -6,6 +6,7 @@ function MessageBarkerFrameMixin:OnLoad()
 	self:DrawMinimapIcon();
 	self.MessageList:SetMessages(MessageBarker:GetMessages());
 	self:LoadDirtyFlags();
+	self:RegisterForDrag("LeftButton")
 end
 
 function MessageBarkerFrameMixin:RegisterCallbacks()
