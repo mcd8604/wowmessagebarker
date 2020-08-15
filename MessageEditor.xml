@@ -28,19 +28,20 @@
 			<Layer level="BORDER">
 				<FontString name="$parentNameFontString" parentKey="NameFontString" inherits="GameFontNormalLeft" text="Name:">
 					<Anchors>
-						<Anchor point="TOPLEFT" x="7" y="-11"/>
+						<Anchor point="TOPLEFT" x="4" y="-4"/>
 					</Anchors>
 				</FontString>
-				<FontString name="$parentMessageTypeFontStringHeader" parentKey="MessageTypeFontStringHeader" inherits="GameFontNormalLeft" text="Message Type:">
+				<!-- <FontString name="$parentMessageTypeFontStringHeader" parentKey="MessageTypeFontStringHeader" inherits="GameFontNormalLeft" text="Type:">
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parentNameFontString" y="-22"/>
-						<!-- <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentNameEditBox"/> -->
 					</Anchors>
 				</FontString>
 				<FontString name="$parentMessageTypeFontStringValue" parentKey="MessageTypeFontStringValue" inherits="GameFontHighlightLeft">
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentMessageTypeFontStringHeader"/>
 					</Anchors>
+				</FontString> -->
+				<FontString name="$parentKeyBindingFontString" parentKey="KeyBindingFontString" inherits="GameFontNormalRight" text="Binding:">
 				</FontString>
 			</Layer>
 		</Layers>
@@ -49,7 +50,7 @@
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentNameFontString" x="7"/>
 				</Anchors>
-				<Size x="175" y="22"/>
+				<Size x="160" y="22"/>
 				<Scripts>
 					<OnTextChanged>
 						self:GetParent():OnNameChanged()
@@ -86,7 +87,7 @@
 				</Scripts>
 			</Button> -->
 			<Frame parentKey="OutputSelectFrame">
-				<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true" alphaMode="BLEND">
+				<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" tile="true" alphaMode="BLEND">
 					<EdgeSize>
 						<AbsValue val="16"/>
 					</EdgeSize>

@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
 	<Script file="MessageTemplates/MessageTemplates.lua"/>
 	<Frame name="MessageTemplate" virtual="true" mixin="MessageTemplateMixin">
-		<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true" alphaMode="BLEND">
+		<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" tile="true" alphaMode="BLEND">
 			<EdgeSize>
 				<AbsValue val="16"/>
 			</EdgeSize>

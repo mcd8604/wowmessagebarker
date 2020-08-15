@@ -29,7 +29,7 @@ function MessageEditorMixin:LoadMessageTypeFrames()
 		local frame = CreateFrame("Frame", frameName, self, templateName)
 		self[key] = frame
 		-- TODO move to OnLoad?
-		frame:SetPoint("TOP", self.MessageTypeFontStringHeader, "BOTTOM")
+		frame:SetPoint("TOP", self.NameEditBox, "BOTTOM")
 		frame:SetPoint("LEFT", self, "LEFT")
 		frame:SetPoint("RIGHT", self, "RIGHT")
 		frame:SetPoint("BOTTOM", self.OutputSelectFrame, "TOP")
@@ -42,7 +42,7 @@ end
 function MessageEditorMixin:CreateBindingButton()
 	local bindingType = { Name = "MessageBarkerBinding", Type = "CustomBindingType", EnumValue = 1 }
 	local handler = CustomBindingHandler:CreateHandler(bindingType);
-	handler:SetOnBindingCompletedCallback(function(completedSuccessfully, keys))
+	handler:SetOnBindingCompletedCallback(function(completedSuccessfully, keys)
 		if completedSuccessfully then
 			if keys and #keys > 0 then
 				for i, k in ipairs(keys) do
@@ -66,6 +66,7 @@ function MessageEditorMixin:CreateBindingButton()
 	self.BindingButton:SetHeight(22);
 	self.BindingButton:SetPoint("TOPRIGHT");
 	self.BindingButton:Show();
+	self.KeyBindingFontString:SetPoint("RIGHT", self.BindingButton, "LEFT")
 end
 
 function MessageEditorMixin:SetMessage(message, keyBindings)
@@ -76,7 +77,7 @@ function MessageEditorMixin:SetMessage(message, keyBindings)
 			self.currentMessage.type = MessageBarker_MessageTypes.Basic
 		end
 		self.currentMessageTypeString = MessageBarker:GetMessageTypeString(self.currentMessage.type)
-		self.MessageTypeFontStringValue:SetText(self.currentMessageTypeString)
+		--self.MessageTypeFontStringValue:SetText(self.currentMessageTypeString)
 		self:UpdateKeyBindings(keyBindings)
 		self:SetMessageContentFrame()
 		self:SetChatOutputSelectors()
