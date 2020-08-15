@@ -83,6 +83,8 @@ function MessageBarkerFrameMixin:SetKeyBindingToSelectedRow(key)
 	local ok = SetBindingClick(key, buttonName);
 	if ok then
 		AttemptToSaveBindings(GetCurrentBindingSet())
+	else
+		self.MessageEditor:ResetKeyBindingButton()
 	end
 end
 

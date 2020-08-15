@@ -42,40 +42,23 @@ end
 function MessageEditorMixin:CreateBindingButton()
 	local bindingType = { Name = "MessageBarkerBinding", Type = "CustomBindingType", EnumValue = 1 }
 	local handler = CustomBindingHandler:CreateHandler(bindingType);
-
-	handler:SetOnBindingModeActivatedCallback(function(isActive)
-		if isActive then
-			--KeyBindingFrame.buttonPressed = button;
-			--KeyBindingFrame_SetSelected("TOGGLE_VOICE_PUSH_TO_TALK", button);
-			--KeyBindingFrame_UpdateUnbindKey();
-			--KeyBindingFrame.outputText:SetFormattedText(BIND_KEY_TO_COMMAND, GetBindingName("TOGGLE_VOICE_PUSH_TO_TALK"));
-		end
-	end);
-
-	handler:SetOnBindingCompletedCallback(function(completedSuccessfully, keys)
-		if keys and #keys > 0 then
-			for i, k in ipairs(keys) do
-				if IsMetaKey(k) then
-					-- Generalizes LEFT/RIGHT modifiers
-					keys[i] = k:sub(2)
-				end
-			end			
-			local key = table.concat(keys, "-");
-			self:TriggerEvent(MessageEditorEvent.BindingChanged, self.currentMessage, key)
+	handler:SetOnBindingCompletedCallback(function(completedSuccessfully, keys))
+		if completedSuccessfully then
+			if keys and #keys > 0 then
+				for i, k in ipairs(keys) do
+					if IsMetaKey(k) then
+						-- Generalizes LEFT/RIGHT modifiers
+						keys[i] = k:sub(2)
+					end
+				end			
+				local key = table.concat(keys, "-");
+				self:TriggerEvent(MessageEditorEvent.BindingChanged, self.currentMessage, key)
+			else
+				self:ResetKeyBindingButton()
+			end
 		else
-			-- TODO clear binding text
+			self:ResetKeyBindingButton()
 		end
-		--KeyBindingFrame_SetSelected(nil);
-
-		--if completedSuccessfully then
-		--	KeyBindingFrame.outputText:SetText(KEY_BOUND);
-		--else
-		--	KeyBindingFrame.outputText:SetText("");
-		--end
-
-		--if completedSuccessfully and keys then
-		--	DisplayUniversalAccessDialogIfRequiredForVoiceChatKeybind(keys);
-		--end
 	end);
 	self.BindingButton = CustomBindingManager:RegisterHandlerAndCreateButton(handler, "CustomBindingButtonTemplateWithLabel", self)
 	self.BindingButton:SetWidth(120)
