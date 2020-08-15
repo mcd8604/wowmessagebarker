@@ -129,3 +129,11 @@ function MessageListMixin:DeleteMessageRow(messageId)
 		self:ResetMessageRowAnchors()
 	end
 end
+
+function MessageListMixin:UpdateKeyBindings()
+	if self.messageRows then
+		for _, row in ipairs(self.messageRows) do
+			row:UpdateKeyBindings()
+		end
+	end
+end

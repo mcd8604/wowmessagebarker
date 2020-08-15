@@ -23,11 +23,12 @@ function MessageBarkerFrameMixin:OnLoad()
 			print(key, buttonName)
 			local ok = SetBindingClick(key, buttonName);
 			print(ok)
-			self.MessageList.selectedRow:GetKeyBindings()
+			AttemptToSaveBindings(GetCurrentBindingSet())
 		end
 	end)
 	self.MessageList:SetMessages(MessageBarker:GetMessages());
 	self:LoadDirtyFlags();
+	self:RegisterEvent("UPDATE_BINDINGS")
 end
 
 do
@@ -46,6 +47,23 @@ end
 
 function MessageBarkerFrameMixin:MarkDirty(maskName)
 	self.DirtyFlags:MarkDirty(self.DirtyFlags[maskName]);
+end
+
+function MessageBarkerFrameMixin:OnShow()
+end
+
+function MessageBarkerFrameMixin:OnEvent(event, ...)
+	if event == "UPDATE_BINDINGS" then
+		self:UpdateKeyBindings()
+	end
+end
+
+function MessageBarkerFrameMixin:UpdateKeyBindings()
+	print('Frame UpdateKeyBindings')
+	self.MessageList:UpdateKeyBindings()
+	if self.MessageList.selectedRow then
+		self.MessageEditor:UpdateKeyBindings(self.MessageList.selectedRow.keyBindings)
+	end
 end
 
 function MessageBarkerFrameMixin:Toggle()

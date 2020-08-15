@@ -12,14 +12,14 @@ function MessageRowMixin:Setup(message)
 			local typeStr = MessageBarker:GetMessageTypeString(self.message.type)
 			self.info:SetText(typeStr);
 		end
-		self:GetKeyBindings()
+		self:UpdateKeyBindings()
 	else
 		self:ResetDisplay()
 	end
 	self:Show();
 end
 
-function MessageRowMixin:GetKeyBindings()
+function MessageRowMixin:UpdateKeyBindings()
 	local command = "CLICK "..self.RunButton:GetName()..":LeftButton"
 	self.keyBindings = GetBindingKey(command)
 	if self.keyBindings then

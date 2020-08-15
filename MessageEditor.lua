@@ -98,7 +98,7 @@ function MessageEditorMixin:SetMessage(message, keyBindings)
 		end
 		self.currentMessageTypeString = MessageBarker:GetMessageTypeString(self.currentMessage.type)
 		self.MessageTypeFontStringValue:SetText(self.currentMessageTypeString)
-		self:SetKeyBindings(keyBindings)
+		self:UpdateKeyBindings(keyBindings)
 		self:SetMessageContentFrame()
 		self:SetChatOutputSelectors()
 		self:Show();
@@ -107,7 +107,7 @@ function MessageEditorMixin:SetMessage(message, keyBindings)
 	end
 end
 
-function MessageEditorMixin:SetKeyBindings(keyBindings)
+function MessageEditorMixin:UpdateKeyBindings(keyBindings)
 	self.keyBindings = keyBindings
 	local keyBindingsText = ''
 	if keyBindings then
