@@ -2,32 +2,18 @@ MessageBarkerFrameMixin = {};
 
 function MessageBarkerFrameMixin:OnLoad()
 	MessageBarker:Load();
+	self:RegisterCallbacks();
 	self:DrawMinimapIcon();
-	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageAdded, function(event, newMessage)
-		self:MarkDirty("UpdateAll");
-	end)
-	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageDeleted, function(event, messageId)
-		--self:MarkDirty("UpdateAll");
-		self.MessageList:DeleteMessageRow(messageId)
-	end)
-	self.MessageList:RegisterCallback(MessageListEvent.RowSelected, function(event, message, keyBindings)
-		self.MessageEditor:SetMessage(message, keyBindings)
-		--self:MarkDirty("UpdateAll");
-	end)
-	self.MessageEditor:RegisterCallback(MessageEditorEvent.MessageChanged, function(event, message)
-		self:MarkDirty("UpdateAll");
-	end)
-	self.MessageEditor:RegisterCallback(MessageEditorEvent.BindingChanged, function(event, message, key)
-		if self.MessageList.selectedMessage == message then
-			local buttonName = self.MessageList.selectedRow.RunButton:GetName()
-			print(key, buttonName)
-			local ok = SetBindingClick(key, buttonName);
-			print(ok)
-			AttemptToSaveBindings(GetCurrentBindingSet())
-		end
-	end)
 	self.MessageList:SetMessages(MessageBarker:GetMessages());
 	self:LoadDirtyFlags();
+end
+
+function MessageBarkerFrameMixin:RegisterCallbacks()
+	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageAdded, function(event, newMessage) self:MarkDirty("UpdateAll"); end)
+	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageDeleted, function(event, messageId) self.MessageList:DeleteMessageRow(messageId) end)
+	self.MessageList:RegisterCallback(MessageListEvent.RowSelected, function(event, message, keyBindings) self.MessageEditor:SetMessage(message, keyBindings) end)
+	self.MessageEditor:RegisterCallback(MessageEditorEvent.MessageChanged, function(event, message) self:MarkDirty("UpdateAll"); end)
+	self.MessageEditor:RegisterCallback(MessageEditorEvent.BindingChanged, function(event, message, key) self:HandleKeyBindingChange(message, key) end)
 	self:RegisterEvent("UPDATE_BINDINGS")
 end
 
@@ -59,10 +45,44 @@ function MessageBarkerFrameMixin:OnEvent(event, ...)
 end
 
 function MessageBarkerFrameMixin:UpdateKeyBindings()
-	print('Frame UpdateKeyBindings')
 	self.MessageList:UpdateKeyBindings()
 	if self.MessageList.selectedRow then
 		self.MessageEditor:UpdateKeyBindings(self.MessageList.selectedRow.keyBindings)
+	end
+end
+
+CONFIRM_OVERWRITE_KEYBINDING = "%s is already bound to %s. Overwrite?"
+StaticPopupDialogs["CONFIRM_OVERWRITE_KEYBINDING"] = {
+	text = CONFIRM_OVERWRITE_KEYBINDING,
+	button1 = OKAY,
+	button2 = CANCEL,
+	OnAccept = function(_, data)
+		data.messageBarkerFrame:SetKeyBindingToSelectedRow(data.key)
+	end,
+	OnCancel = function(_, data)
+		data.messageBarkerFrame.MessageEditor:ResetKeyBindingButton()
+	end,
+	timeout = 0,
+	whileDead = 1,
+	showAlert = 1,
+};
+
+function MessageBarkerFrameMixin:HandleKeyBindingChange(message, key)
+	if self.MessageList.selectedMessage == message then
+		local action = GetBindingAction(key);
+		if action and action ~= '' then
+			StaticPopup_Show("CONFIRM_OVERWRITE_KEYBINDING", key, action, { messageBarkerFrame = self, key = key } )
+		else
+			self:SetKeyBindingToSelectedRow(key)
+		end
+	end
+end
+
+function MessageBarkerFrameMixin:SetKeyBindingToSelectedRow(key)
+	local buttonName = self.MessageList.selectedRow.RunButton:GetName()
+	local ok = SetBindingClick(key, buttonName);
+	if ok then
+		AttemptToSaveBindings(GetCurrentBindingSet())
 	end
 end
 

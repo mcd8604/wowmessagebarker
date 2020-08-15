@@ -62,10 +62,6 @@ function MessageEditorMixin:CreateBindingButton()
 			end			
 			local key = table.concat(keys, "-");
 			self:TriggerEvent(MessageEditorEvent.BindingChanged, self.currentMessage, key)
-			--local ok = SetBindingClick(key, self.RunButton:GetName());
-			--print(GetBindingByKey(key))
-			--self.message.keybind = key
-			-- TODO on message delete, remove binding
 		else
 			-- TODO clear binding text
 		end
@@ -115,6 +111,10 @@ function MessageEditorMixin:UpdateKeyBindings(keyBindings)
 		keyBindingsText = keyBindings
 	end
 	self.BindingButton:SetText(keyBindingsText)
+end
+
+function MessageEditorMixin:ResetKeyBindingButton()
+	self:UpdateKeyBindings(self.keyBindings)
 end
 
 function MessageEditorMixin:SetMessageContentFrame()
