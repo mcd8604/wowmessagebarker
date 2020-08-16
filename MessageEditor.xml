@@ -99,7 +99,8 @@
 					</BackgroundInsets>
 				</Backdrop>
 				<Anchors>
-					<Anchor point="TOPLEFT" y="-300"/>
+					<Anchor point="TOP"/>
+					<Anchor point="LEFT" relativePoint="TOPRIGHT" x="-200"/>
 					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
 				</Anchors>
 			</Frame>

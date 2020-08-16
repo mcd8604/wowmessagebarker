@@ -31,8 +31,8 @@ function MessageEditorMixin:LoadMessageTypeFrames()
 		-- TODO move to OnLoad?
 		frame:SetPoint("TOP", self.NameEditBox, "BOTTOM")
 		frame:SetPoint("LEFT", self, "LEFT")
-		frame:SetPoint("RIGHT", self, "RIGHT")
-		frame:SetPoint("BOTTOM", self.OutputSelectFrame, "TOP")
+		frame:SetPoint("RIGHT", self.OutputSelectFrame, "LEFT")
+		frame:SetPoint("BOTTOM", self, "BOTTOM")
 		frame:Load()
 		frame:Hide()
 		self.messageTypeFrames[i] = frame
@@ -64,7 +64,7 @@ function MessageEditorMixin:CreateBindingButton()
 	self.BindingButton:SetWidth(120)
 	self.BindingButton.selectedHighlight:SetWidth(120)
 	self.BindingButton:SetHeight(22);
-	self.BindingButton:SetPoint("TOPRIGHT");
+	self.BindingButton:SetPoint("TOPRIGHT", self.OutputSelectFrame, "TOPLEFT");
 	self.BindingButton:Show();
 	self.KeyBindingFontString:SetPoint("RIGHT", self.BindingButton, "LEFT")
 end
@@ -154,13 +154,16 @@ end
 function MessageEditorMixin:SetChatOutputSelectors()
 	self.outputSelectorPool:ReleaseAll()
 	self.outputSelectors = {}
-	self:AddOutputSelectorCheckboxes(self:GetDefaultChatOutputs(), 1)
-	self:AddOutputSelectorCheckboxes(self:GetChannelOutputs(), 2)
+	self:AddOutputSelectorCheckboxes(self:GetDefaultChatOutputs())
+	self:AddOutputSelectorCheckboxes(self:GetChannelOutputs())
 end
 
 -- TODO refactor this - break down into named chunks/functions
-function MessageEditorMixin:AddOutputSelectorCheckboxes(outputs, columnNumber)
+function MessageEditorMixin:AddOutputSelectorCheckboxes(outputs)
 	local prevCheckBox = nil
+	if #self.outputSelectors > 0 then 
+		prevCheckBox = self.outputSelectors[#self.outputSelectors]
+	end
 	for _, output in ipairs(outputs) do
 		local checkBox = self.outputSelectorPool:Acquire()
 		local checkBoxName = output.display or output.channel
@@ -171,11 +174,7 @@ function MessageEditorMixin:AddOutputSelectorCheckboxes(outputs, columnNumber)
 		if prevCheckBox then
 			checkBox:SetPoint("TOPLEFT", prevCheckBox, "BOTTOMLEFT", 0, 0);
 		else
-			local x = 4
-			if columnNumber > 1 then
-				x = 4 + self.OutputSelectFrame:GetWidth() / 2
-			end
-			checkBox:SetPoint("TOPLEFT", self.OutputSelectFrame, "TOPLEFT", x, -4);
+			checkBox:SetPoint("TOPLEFT", self.OutputSelectFrame, "TOPLEFT", 4, -4);
 		end
 		checkBox:Show();
 		checkBox:SetScript("OnClick", function(...) 
