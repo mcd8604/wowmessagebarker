@@ -28,12 +28,11 @@ function MessageEditorMixin:LoadMessageTypeFrames()
 		local templateName = messageType.."MessageTemplate"
 		local frame = CreateFrame("Frame", frameName, self, templateName)
 		self[key] = frame
-		-- TODO move to OnLoad?
 		frame:SetPoint("TOP", self.NameEditBox, "BOTTOM")
 		frame:SetPoint("LEFT", self, "LEFT")
 		frame:SetPoint("RIGHT", self.OutputSelectFrame, "LEFT")
 		frame:SetPoint("BOTTOM", self, "BOTTOM")
-		frame:Load()
+		frame:UpdateLayout()
 		frame:Hide()
 		self.messageTypeFrames[i] = frame
 	end

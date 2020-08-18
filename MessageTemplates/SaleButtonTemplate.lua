@@ -5,9 +5,7 @@ function SaleButtonTemplateMixin:OnClick()
 	if objectType == "item" and not self.itemData then
 		ClearCursor()
 		-- TODO should probably replace this with event pattern
-		local saleMessageTemplate = self:GetParent()
-		table.insert(saleMessageTemplate.message.content.items, MessageFactory:CreateItemContent(itemId, itemLink))
-		saleMessageTemplate:Update()
+		self:GetParent():AddItem(itemId, itemLink)
 	end
 end
 
@@ -19,7 +17,5 @@ end
 
 function SaleButtonTemplateMixin:DeleteButtonClicked()
 	-- TODO should probably replace this with event pattern
-	local saleMessageTemplate = self:GetParent()
-	tDeleteItem(saleMessageTemplate.message.content.items, self.itemData)
-	saleMessageTemplate:Update()
+	self:GetParent():DeleteItem(self.itemData)
 end

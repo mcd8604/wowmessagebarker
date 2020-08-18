@@ -1,0 +1,13 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="ItemListScrollFrame.lua"/>
+	<ScrollFrame name="ItemListScrollFrameTemplate" inherits="FauxScrollFrameTemplate" mixin="ItemListScrollFrameMixin" virtual="true">
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnScrollRangeChanged function="ScrollFrame_OnScrollRangeChanged"/>
+			<OnVerticalScroll>
+				FauxScrollFrame_OnVerticalScroll(self, offset, self.itemRowHeight, self.Update);
+			</OnVerticalScroll>
+		</Scripts>
+	</ScrollFrame>
+</Ui>

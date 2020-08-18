@@ -2,6 +2,7 @@
 ..\FrameXML\UI.xsd">
 	<Script file="MessageTemplates/SaleMessageTemplate.lua"/>
 	<Include file="MessageTemplates/SaleButtonTemplate.xml"/>>
+	<Include file="ItemListScrollFrame.xml"/>>
 	<Frame name="SaleMessageTemplate" inherits="MessageTemplate" virtual="true" mixin="SaleMessageTemplateMixin">
 		<Layers>
 			<Layer level="BORDER">
@@ -46,21 +47,19 @@
 					</OnTextChanged>
 				</Scripts>
 			</EditBox>
-			<ScrollFrame name="$parentSaleScrollFrame" parentKey="SaleScrollFrame" inherits="FauxScrollFrameTemplate">
+			<ScrollFrame name="$parentSaleScrollFrame" parentKey="SaleScrollFrame" inherits="ItemListScrollFrameTemplate" mixin="SaleScrollFrameMixin">
+				<KeyValues>
+					<KeyValue key="itemRowSpacing" value="2" type="number"/>
+					<KeyValue key="itemRowFrameType" value="Button" type="string"/>
+					<KeyValue key="itemRowTemplate" value="SaleButtonTemplate" type="string"/>
+					<KeyValue key="scrollBarHideable" value="true" type="boolean"/>
+				</KeyValues>
 				<Anchors>
 					<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentPrefixEditBox" y="-2"/>
 					<Anchor point="LEFT"  x="7" />
 					<Anchor point="RIGHT" x="-27"/>
 					<Anchor point="BOTTOM" relativePoint="TOP" relativeTo="$parentSuffixEditBox" y="2" />
 				</Anchors>
-				<Scripts>
-					<OnScrollRangeChanged function="ScrollFrame_OnScrollRangeChanged"/>
-					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, self:GetParent():GetRowHeight(), function() 
-							self:GetParent():Update()
-						end);
-					</OnVerticalScroll>
-				</Scripts>
 			</ScrollFrame>
 		</Frames>
 	</Frame>

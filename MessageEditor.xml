@@ -57,13 +57,6 @@
 					</OnTextChanged>
 				</Scripts>
 			</EditBox>
-			<!-- <Frame name="$parentMessageContentFrame" parentKey="MessageContentFrame">
-				<Size x="0" y="22"/>
-				<Anchors>
-					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentMessageTypeFontStringHeader"/>
-					<Anchor point="RIGHT" relativePoint="RIGHT" />
-				</Anchors>
-			</Frame> -->
 			<!-- <Button name="$parentCancelButton" parentKey="CancelButton" inherits="UIPanelButtonTemplate" text="Cancel">
 				<Size x="80" y="22"/>
 				<Anchors>
@@ -86,7 +79,7 @@
 					</OnClick>
 				</Scripts>
 			</Button> -->
-			<Frame parentKey="OutputSelectFrame">
+			<Frame parentKey="OutputSelectFrame" name="$parentOutputSelectFrame">
 				<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" tile="true" alphaMode="BLEND">
 					<EdgeSize>
 						<AbsValue val="16"/>
