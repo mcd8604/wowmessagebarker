@@ -1,6 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Script file="MessageEditor.lua"/>
+	<Script file="OutputSelectScrollFrame.lua"/>
 	<Include file="MessageTemplates/MessageTemplates.xml" />
 <!-- 	<ScrollFrame name="MessageEditorTemplate" mixin="MessageEditorMixin" inherits="UIPanelScrollFrameCodeTemplate" virtual="true">
 		<Frames>
@@ -79,7 +80,7 @@
 					</OnClick>
 				</Scripts>
 			</Button> -->
-			<Frame parentKey="OutputSelectFrame" name="$parentOutputSelectFrame">
+			<!-- <Frame parentKey="OutputSelectFrame" name="$parentOutputSelectFrame">
 				<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" tile="true" alphaMode="BLEND">
 					<EdgeSize>
 						<AbsValue val="16"/>
@@ -96,7 +97,24 @@
 					<Anchor point="LEFT" relativePoint="TOPRIGHT" x="-200"/>
 					<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
 				</Anchors>
-			</Frame>
+			</Frame> -->
+			<ScrollFrame parentKey="OutputSelectFrame" name="$parentOutputSelectFrame" inherits="ItemListScrollFrameTemplate" mixin="OutputSelectScrollFrameMixin">
+				<KeyValues>
+					<KeyValue key="itemRowSpacing" value="0" type="number"/>
+					<KeyValue key="itemRowFrameType" value="Frame" type="string"/>
+					<KeyValue key="itemRowTemplate" value="ChatConfigCheckBoxTemplate" type="string"/>
+					<KeyValue key="scrollBarHideable" value="true" type="boolean"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOP"/>
+					<Anchor point="LEFT" relativePoint="TOPRIGHT" x="-200"/>
+					<Anchor point="RIGHT" x="-27"/>
+					<Anchor point="BOTTOM" y="2"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+				</Scripts>
+			</ScrollFrame>
 		</Frames>
 		<Scripts>
 			<OnLoad method="Load"/>

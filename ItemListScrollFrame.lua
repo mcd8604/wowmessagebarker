@@ -52,7 +52,6 @@ function ItemListScrollFrameMixin:CreateItemRow(i)
 		name = format("%s%i", self.itemRowNamePrefix, i)
 	end
 	local row = CreateFrame(self.itemRowFrameType, name, self:GetParent(), self.itemRowTemplate);
-	row:SetPoint("RIGHT");
 	return row
 end
 
@@ -85,9 +84,8 @@ function ItemListScrollFrameMixin:Update()
 				row:Hide()
 			end
 		end
-		-- temporary width values until this is working
-		local smallWidth = 200
-		local bigWidth = 280
+		local smallWidth = self:GetWidth() - self.ScrollBar:GetWidth()
+		local bigWidth = self:GetWidth()
 		FauxScrollFrame_Update(self, numItems, self.maxNumButtonsVisible, self.itemRowHeight, self.itemRowNamePrefix, smallWidth, bigWidth)
 	end
 end

@@ -6,7 +6,7 @@
 			<OnLoad method="OnLoad"/>
 			<OnScrollRangeChanged function="ScrollFrame_OnScrollRangeChanged"/>
 			<OnVerticalScroll>
-				FauxScrollFrame_OnVerticalScroll(self, offset, self.itemRowHeight, self.Update);
+				FauxScrollFrame_OnVerticalScroll(self, offset, self.itemRowHeight or 0, self.Update);
 			</OnVerticalScroll>
 		</Scripts>
 	</ScrollFrame>

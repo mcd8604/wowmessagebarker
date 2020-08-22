@@ -7,16 +7,9 @@ MessageEditorEvent = {
 function MessageEditorMixin:Load()
 	self:OnLoad() -- for CallbackRegistryBaseMixin:OnLoad
 	self:Hide()
-	local ResetCheckButton = function(pool, checkButton)
-		checkButton:SetChecked(false)
-		checkButton.Text:SetText('')
-		checkButton:ClearAllPoints()
-	end
 	self:LoadMessageTypeFrames()
-	self.outputSelectorPool = CreateFramePool("CheckButton", self.OutputSelectFrame, "ChatConfigCheckButtonTemplate", ResetCheckButton);
-	self.outputSelectors = {}
-	self:AddEvent("CHANNEL_UI_UPDATE")
 	self:CreateBindingButton()
+	self.OutputSelectFrame:UpdateLayout()
 end
 
 -- NOTE: Message type templates should follow the naming convention: "<MessageType>MessageTemplate"
@@ -79,7 +72,7 @@ function MessageEditorMixin:SetMessage(message, keyBindings)
 		--self.MessageTypeFontStringValue:SetText(self.currentMessageTypeString)
 		self:UpdateKeyBindings(keyBindings)
 		self:SetMessageContentFrame()
-		self:SetChatOutputSelectors()
+		self.OutputSelectFrame:SetMessage(self.currentMessage)
 		self:Show();
 	else 
 		self:Hide()
@@ -107,122 +100,7 @@ function MessageEditorMixin:SetMessageContentFrame()
 	local frame = self.messageTypeFrames[self.currentMessage.type]
 	assert(frame, "No frame exists for message type: "..self.currentMessageTypeString)
 	frame:SetMessage(self.currentMessage)
-	--self.MessageContentFrame:SetHeight(frame:GetHeight())
 	frame:Show()
-	--self.OutputSelectFrame:SetPoint("TOPLEFT", frame, "BOTTOMLEFT")
-end
-
--- SendChatMessage(msg [, chatType, languageID, target])
-function MessageEditorMixin:GetDefaultChatOutputs()
-	return {
-		{ chatType = "SAY", 			display = SAY },
-		{ chatType = "YELL", 			display = YELL },
-		{ chatType = "RAID", 			display = RAID },
-		{ chatType = "RAID_WARNING", 	display = RAID_WARNING },
-		{ chatType = "INSTANCE_CHAT", 	display = INSTANCE_CHAT },
-		{ chatType = "GUILD", 			display = GUILD },
-	}
-end
-
-function MessageEditorMixin:GetChannelOutputs()
-	-- Union the the player's currently joined channels with the message's existing channel outputs
-	local channelOutputs = self:ConvertChannelList(GetChannelList())
-	self:EnsureMessageOutputs()
-	for _, output in ipairs(self.currentMessage.outputs) do
-		if output.chatType == "CHANNEL" then
-			-- check if output exists in channelOutputs
-			if not self:IndexOfMessageOutput(channelOutputs, output) then
-				table.insert(channelOutputs, output)
-			end
-		end
-	end
-	return channelOutputs
-end
-
-function MessageEditorMixin:ConvertChannelList(...)
-	local channelOutputs = {}
-	for i=1, select("#", ...), 3 do
-		--local channelID = select(i, ...);
-		local channel = select(i+1, ...);
-		--local disabled = select(i+2, ...);
-		table.insert(channelOutputs, { chatType = "CHANNEL", channel = channel })
-	end
-	return channelOutputs
-end
-
-function MessageEditorMixin:SetChatOutputSelectors()
-	self.outputSelectorPool:ReleaseAll()
-	self.outputSelectors = {}
-	self:AddOutputSelectorCheckboxes(self:GetDefaultChatOutputs())
-	self:AddOutputSelectorCheckboxes(self:GetChannelOutputs())
-end
-
--- TODO refactor this - break down into named chunks/functions
-function MessageEditorMixin:AddOutputSelectorCheckboxes(outputs)
-	local prevCheckBox = nil
-	if #self.outputSelectors > 0 then 
-		prevCheckBox = self.outputSelectors[#self.outputSelectors]
-	end
-	for _, output in ipairs(outputs) do
-		local checkBox = self.outputSelectorPool:Acquire()
-		local checkBoxName = output.display or output.channel
-		checkBox.Text:SetText(checkBoxName);
-		local checked = self:IndexOfMessageOutput(self.currentMessage.outputs, output) ~= nil
-		checkBox:SetChecked(checked)
-		checkBox.output = output
-		if prevCheckBox then
-			checkBox:SetPoint("TOPLEFT", prevCheckBox, "BOTTOMLEFT", 0, 0);
-		else
-			checkBox:SetPoint("TOPLEFT", self.OutputSelectFrame, "TOPLEFT", 4, -4);
-		end
-		checkBox:Show();
-		checkBox:SetScript("OnClick", function(...) 
-			if checkBox:GetChecked() then
-				self:AddMessageOutput(checkBox.output)
-			else
-				self:RemoveMessageOutput(checkBox.output)
-			end
-		end)
-		prevCheckBox = checkBox
-		table.insert(self.outputSelectors, checkBox)
-	end
-end
-
-function MessageEditorMixin:AddMessageOutput(output)
-	self:EnsureMessageOutputs()
-	if not self:IndexOfMessageOutput(self.currentMessage.outputs, output) then
-		table.insert(self.currentMessage.outputs, output)
-	end
-end
-
-function MessageEditorMixin:RemoveMessageOutput(output)
-	self:EnsureMessageOutputs()
-	local index = self:IndexOfMessageOutput(self.currentMessage.outputs, output)
-	if index then
-		self.currentMessage.outputs[index] = nil
-	end
-end
-
-function MessageEditorMixin:IndexOfMessageOutput(outputs, output)
-	local index = nil
-	if output then
-		index, _ = FindInTableIf(outputs, function(other) 
-			return output.chatType == other.chatType and
-				(output.chatType ~= "CHANNEL" or (output.channel and output.channel == other.channel))
-		end)
-	end
-	return index
-end
-
-function MessageEditorMixin:EnsureMessageOutputs()
-	local ensured = false
-	if self.currentMessage then
-		if not self.currentMessage.outputs then
-			self.currentMessage.outputs = {}
-		end
-		ensured = true
-	end
-	return ensured
 end
 
 --[[ function MessageEditorMixin:CancelMessageEdit()
@@ -243,12 +121,6 @@ end ]]
 function MessageEditorMixin:OnNameChanged()
 	self.currentMessage.name = self.NameEditBox:GetText()
 	self:TriggerEvent(MessageEditorEvent.MessageChanged, self.currentMessage)
-end
-
-function MessageEditorMixin:OnEvent(event, ...)
-	if event == "CHANNEL_UI_UPDATE" then
-		self:SetChatOutputSelectors()
-	end
 end
 
 function MessageEditorMixin:OnShow()
