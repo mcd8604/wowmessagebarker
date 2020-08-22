@@ -84,8 +84,8 @@ function ItemListScrollFrameMixin:Update()
 				row:Hide()
 			end
 		end
-		local smallWidth = self:GetWidth() - self.ScrollBar:GetWidth()
-		local bigWidth = self:GetWidth()
+		local smallWidth = self:GetWidth()
+		local bigWidth = self:GetWidth() + self.ScrollBar:GetWidth()
 		FauxScrollFrame_Update(self, numItems, self.maxNumButtonsVisible, self.itemRowHeight, self.itemRowNamePrefix, smallWidth, bigWidth)
 	end
 end
