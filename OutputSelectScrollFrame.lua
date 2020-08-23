@@ -6,7 +6,7 @@ function OutputSelectScrollFrameMixin:OnLoad()
 end
 
 function OutputSelectScrollFrameMixin:OnEvent(event, ...)
-	if event == "CHANNEL_UI_UPDATE" then
+	if event == "CHANNEL_UI_UPDATE" then)
 		self:UpdateOutputs()
 	end
 end
@@ -132,4 +132,12 @@ function OutputSelectScrollFrameMixin:EnsureMessageOutputs()
 		ensured = true
 	end
 	return ensured
+end
+
+function OutputSelectScrollFrameMixin:OnShow()
+	self:SetEventsRegistered(true);
+end
+
+function OutputSelectScrollFrameMixin:OnHide()
+	self:SetEventsRegistered(false);
 end

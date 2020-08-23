@@ -1,4 +1,4 @@
-MessageEditorMixin = CreateFromMixins(CallbackRegistryBaseMixin, EventRegistrationHelper);
+MessageEditorMixin = CreateFromMixins(CallbackRegistryBaseMixin);
 MessageEditorEvent = {
 	MessageChanged = 1,
 	BindingChanged = 2,
@@ -121,12 +121,4 @@ end ]]
 function MessageEditorMixin:OnNameChanged()
 	self.currentMessage.name = self.NameEditBox:GetText()
 	self:TriggerEvent(MessageEditorEvent.MessageChanged, self.currentMessage)
-end
-
-function MessageEditorMixin:OnShow()
-	self:SetEventsRegistered(true);
-end
-
-function MessageEditorMixin:OnHide()
-	self:SetEventsRegistered(false);
 end

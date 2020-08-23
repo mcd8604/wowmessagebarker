@@ -113,15 +113,14 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad method="OnLoad"/>
+					<OnShow method="OnShow"/>
+					<OnHide method="OnHide"/>
+					<OnEvent method="OnEvent"/>
 				</Scripts>
 			</ScrollFrame>
 		</Frames>
 		<Scripts>
 			<OnLoad method="Load"/>
-			<OnShow method="OnShow"/>
-			<OnHide method="OnHide"/>
-			<OnEvent method="OnEvent"/>
-			<OnUpdate method="OnUpdate"/>
 		</Scripts>
 	</Frame>
 </Ui>
