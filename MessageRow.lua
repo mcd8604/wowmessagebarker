@@ -19,15 +19,30 @@ function MessageRowMixin:Setup(message)
 	self:Show();
 end
 
+function MessageRowMixin:GetBindingCommand()
+	return "CLICK "..self.RunButton:GetName()..":LeftButton"
+end
+
 function MessageRowMixin:UpdateKeyBindings()
-	local command = "CLICK "..self.RunButton:GetName()..":LeftButton"
-	self.keyBindings = GetBindingKey(command)
+	self.keyBindings = GetBindingKey(self:GetBindingCommand())
 	if self.keyBindings then
 		self.keybind:SetText(self.keyBindings)
 		-- TODO display additional bindings (in tooltip?)
 	else
 		self.keybind:SetText('')
 	end
+end
+
+function MessageRowMixin:RemoveKeyBindings()
+	local function removeKeyBindings(...)
+		for i = 1, select('#', ...) do
+			local ok = SetBinding(select(i, ...))
+			if ok then
+				AttemptToSaveBindings(GetCurrentBindingSet())
+			end
+		end 
+	end
+	removeKeyBindings(GetBindingKey(self:GetBindingCommand()))
 end
 
 --[[ function MessageRowMixin:Reset()

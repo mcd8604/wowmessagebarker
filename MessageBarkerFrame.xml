@@ -57,7 +57,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						self:GetParent():DeleteSelectedMessage();
+						self:GetParent():PromptDeleteSelectedMessage();
 					</OnClick>
 				</Scripts>
 			</Button>

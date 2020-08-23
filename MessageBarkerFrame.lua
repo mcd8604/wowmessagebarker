@@ -72,7 +72,7 @@ function MessageBarkerFrameMixin:HandleKeyBindingChange(message, key)
 	if self.MessageList.selectedMessage == message then
 		local action = GetBindingAction(key);
 		if action and action ~= '' then
-			StaticPopup_Show("CONFIRM_OVERWRITE_KEYBINDING", key, action, { messageBarkerFrame = self, key = key } )
+			StaticPopup_Show("CONFIRM_OVERWRITE_KEYBINDING", key, action, { messageBarkerFrame = self, key = key })
 		else
 			self:SetKeyBindingToSelectedRow(key)
 		end
@@ -172,16 +172,18 @@ StaticPopupDialogs["CONFIRM_DELETE_MESSAGE"] = {
 	button1 = OKAY,
 	button2 = CANCEL,
 	OnAccept = function(_, data)
-		MessageBarker:DeleteMessage(data)
+		data.messageRow:RemoveKeyBindings()
+		MessageBarker:DeleteMessage(data.messageToDelete)
 	end,
 	timeout = 0,
 	whileDead = 1,
 	showAlert = 1,
 };
 
-function MessageBarkerFrameMixin:DeleteSelectedMessage()
-	local msg = self.MessageList:GetSelectedMessage()
-	StaticPopup_Show("CONFIRM_DELETE_MESSAGE", msg.name, nil, msg)
+function MessageBarkerFrameMixin:PromptDeleteSelectedMessage()
+	local selectedMessage = self.MessageList:GetSelectedMessage()
+	local messageRow = self.MessageList.selectedRow
+	StaticPopup_Show("CONFIRM_DELETE_MESSAGE", selectedMessage.name, nil, { messageRow = messageRow, messageToDelete = selectedMessage })
 end
 
 -- Minimap icon
