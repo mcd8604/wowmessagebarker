@@ -166,9 +166,22 @@ function MessageBarkerFrameMixin:AddNewMessage()
 	MessageBarker:AddNewMessage(newMessage)
 end
 
+CONFIRM_DELETE_MESSAGE = "Delete message: %s?"
+StaticPopupDialogs["CONFIRM_DELETE_MESSAGE"] = {
+	text = CONFIRM_DELETE_MESSAGE,
+	button1 = OKAY,
+	button2 = CANCEL,
+	OnAccept = function(_, data)
+		MessageBarker:DeleteMessage(data)
+	end,
+	timeout = 0,
+	whileDead = 1,
+	showAlert = 1,
+};
+
 function MessageBarkerFrameMixin:DeleteSelectedMessage()
-	local selectedMessage = self.MessageList:GetSelectedMessage()
-	MessageBarker:DeleteMessage(selectedMessage)
+	local msg = self.MessageList:GetSelectedMessage()
+	StaticPopup_Show("CONFIRM_DELETE_MESSAGE", msg.name, nil, msg)
 end
 
 -- Minimap icon
