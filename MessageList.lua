@@ -64,8 +64,8 @@ function MessageListMixin:ResetMessageRowAnchors()
 end
 
 function MessageListMixin:SetSelectedRow(row)
-	self:UnhighlightAllRows()
 	if not self:IsSelectedRow(row) then
+		self:UnhighlightAllRows()
 		self.selectedRow = row
 		if self.selectedRow then
 			self.selectedMessage = row.message
