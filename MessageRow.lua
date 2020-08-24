@@ -58,10 +58,6 @@ function MessageRowMixin:ResetDisplay()
 	self.info:SetText('');
 end
 
-function MessageRowMixin:OnClick()
-	print('click')
-end
-
 function MessageRowMixin:RunClicked()
 	MessageBarker:BarkMessage(self.message.id)
 end
