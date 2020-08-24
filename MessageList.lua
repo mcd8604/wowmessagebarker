@@ -40,7 +40,8 @@ function MessageListMixin:FindMessageRow(messageId)
 end
 
 function MessageListMixin:CreateMessageRow(message)
-	local name = self:GetName().."MessageRow"..message.id
+	--local name = self:GetName().."MessageRow"..message.id
+	local name = "MessageBarker_Msg"..message.id
 	local messageRow = CreateFrame("Button", name, self.Child, "MessageRowTemplate")
 	messageRow:SetScript("OnClick", function(editButton, event, ...)
 		self:SetSelectedRow(messageRow);

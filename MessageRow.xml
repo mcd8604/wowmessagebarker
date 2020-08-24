@@ -41,7 +41,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button parentKey="RunButton" name="$parentRunButton" inherits="UIPanelButtonTemplate" text="Run">
+			<Button parentKey="RunButton" name="$parent_Run" inherits="UIPanelButtonTemplate" text="Run">
 				<Size x="40" y="22"/>
 				<Anchors>
 					<Anchor point="TOPRIGHT"/>
