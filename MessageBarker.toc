@@ -1,6 +1,6 @@
 ## Interface: 11305
 ## Title: MessageBarker
-## Notes: Tool for storing sequences of chat messages and sending them to specified chat channels via configurable key bindings.
+## Notes: Addon for creating, storing, and sending chat messages to multiple channels at once. Supports item linking and configurable key binding.
 ## Author: Maurty
 ## OptionalDeps: Ace3
 ## Version: 0.1
