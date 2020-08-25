@@ -1,21 +1,24 @@
 MessageBarkerFrameMixin = {};
 
 function MessageBarkerFrameMixin:OnLoad()
-	MessageBarker:Load();
 	self:RegisterCallbacks();
-	self:DrawMinimapIcon();
-	self.MessageList:SetMessages(MessageBarker:GetMessages());
 	self:LoadDirtyFlags();
 	self:RegisterForDrag("LeftButton")
 end
 
 function MessageBarkerFrameMixin:RegisterCallbacks()
+	MessageBarker:RegisterCallback(MessageBarkerEvent.Initialized, function(event) self:Initialize() end)
 	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageAdded, function(event, newMessage) self:MarkDirty("UpdateAll"); end)
 	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageDeleted, function(event, messageId) self.MessageList:DeleteMessageRow(messageId) end)
 	self.MessageList:RegisterCallback(MessageListEvent.RowSelected, function(event, message, keyBindings) self.MessageEditor:SetMessage(message, keyBindings) end)
 	self.MessageEditor:RegisterCallback(MessageEditorEvent.MessageChanged, function(event, message) self:MarkDirty("UpdateAll"); end)
 	self.MessageEditor:RegisterCallback(MessageEditorEvent.BindingChanged, function(event, message, key) self:HandleKeyBindingChange(message, key) end)
 	self:RegisterEvent("UPDATE_BINDINGS")
+end
+
+function MessageBarkerFrameMixin:Initialize()
+	self:DrawMinimapIcon();
+	self.MessageList:SetMessages(MessageBarker:GetMessages());
 end
 
 do
@@ -188,7 +191,7 @@ end
 
 -- Minimap icon
 function MessageBarkerFrameMixin:DrawMinimapIcon()
-	LibStub("LibDBIcon-1.0"):Register("MessageBarkerFrameMixin", LibStub("LibDataBroker-1.1"):NewDataObject("MessageBarkerFrameMixin",
+	LibStub("LibDBIcon-1.0"):Register("MessageBarkerFrame", LibStub("LibDataBroker-1.1"):NewDataObject("MessageBarkerFrame",
 	{
 		type = "data source",
 		text = "Message Barker",
@@ -202,5 +205,5 @@ function MessageBarkerFrameMixin:DrawMinimapIcon()
 			tooltip:AddLine(format("%s", "Message Barker"));
 			tooltip:AddLine("|cFFCFCFCFLeft Click: |rOpen Message Barker");
 		end
-	}), MessageBarkerDB.char.minimapButton);
+	}), MessageBarker.db.char.minimapButton);
 end

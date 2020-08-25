@@ -1,30 +1,33 @@
-MessageBarker = CreateFromMixins(CallbackRegistryBaseMixin, MessageFactory);
+MessageBarker = LibStub("AceAddon-3.0"):NewAddon("MessageBarker")
+MessageBarker = Mixin(MessageBarker, CallbackRegistryBaseMixin, MessageFactory);
+MessageBarker.callbackRegistry = {};
 MessageBarkerEvent = {
-	MessageAdded = 1,
-	MessageDeleted = 2,
+	Initialized = 1,
+	MessageAdded = 2,
+	MessageDeleted = 3,	
 }
 
 -- Slash Commands
 SLASH_MESSAGEBARKER1, SLASH_MESSAGEBARKER2, SLASH_MESSAGEBARKER3 = "/bm", "/barkmsg", "/barkmessage"
 SlashCmdList.MESSAGEBARKER = function(msg, editBox)
-	MessageBarker:BarkMessage(msg, MessageBarkerDB.char.testOutputMode or false)
+	MessageBarker:BarkMessage(msg, MessageBarker.db.char.testOutputMode or false)
 end
 
-function MessageBarker:Load()
-	self:OnLoad() -- for CallbackRegistryBaseMixin:OnLoad
-	MessageBarkerDB = LibStub("AceDB-3.0"):New("MessageBarkerDB", {
+function MessageBarker:OnInitialize()
+	self.db = LibStub("AceDB-3.0"):New("MessageBarkerDB", {
 		factionrealm = self:GetDefaultFactionRealmDB(),
 		char = {
 			minimapButton = {hide = false},
 			testOutputMode = false
 		}
 	}, true)
+	self:TriggerEvent(MessageBarkerEvent.Initialized)
 end
 
 function MessageBarker:BarkMessage(messageId, testOutput)
 	if messageId then
 		if testOutput == nil then
-			testOutput = MessageBarkerDB.char.testOutputMode
+			testOutput = self.db.char.testOutputMode
 		end
 		local message = self:GetMessageById(messageId)
 		if message and message.outputs then
@@ -59,15 +62,12 @@ end
 
 -- Ensures the messages table is never nil
 function MessageBarker:EnsureDB()
-	if not MessageBarkerDB then
-		self.InitializeDB()
-	end
-	if not MessageBarkerDB.factionrealm then
-		MessageBarkerDB.factionrealm = self:GetDefaultFactionRealmDB()
-	end
-	if not MessageBarkerDB.factionrealm.messages then
-		MessageBarkerDB.factionrealm.messages = {}
-	end
+	--if not MessageBarkerDB.factionrealm then
+	--	MessageBarkerDB.factionrealm = self:GetDefaultFactionRealmDB()
+	--end
+	--if not MessageBarkerDB.factionrealm.messages then
+	--	MessageBarkerDB.factionrealm.messages = {}
+	--end
 end
 
 function MessageBarker:GetDefaultFactionRealmDB()
@@ -80,18 +80,18 @@ end
 
 function MessageBarker:GetMessages()
 	self:EnsureDB()
-	return MessageBarkerDB.factionrealm.messages
+	return self.db.factionrealm.messages
 end
 
 function MessageBarker:GetMessageById(messageId)
 	self:EnsureDB()
-	return MessageBarkerDB.factionrealm.messages[tonumber(messageId)]
+	return self.db.factionrealm.messages[tonumber(messageId)]
 end
 
 function MessageBarker:SaveMessage(message)
 	if message and message.id then
 		self:EnsureDB()
-		MessageBarkerDB.factionrealm.messages[message.id] = message
+		self.db.factionrealm.messages[message.id] = message
 	end
 end
 
@@ -105,16 +105,16 @@ end
 
 -- NOTE: Doesn't account for number overflow, though is highly unlikely
 function MessageBarker:GetNextMessageID()
-	if not MessageBarkerDB.factionrealm.nextId then
-		MessageBarkerDB.factionrealm.nextId = 1
+	if not self.db.factionrealm.nextId then
+		self.db.factionrealm.nextId = 1
 	end
-	local newId = MessageBarkerDB.factionrealm.nextId
+	local newId = self.db.factionrealm.nextId
 	-- make sure new Id is max in case the sequence was altered inappropriately
 	local maxId = self:GetMaxMessageID()
 	if newId <= maxId then
 		newId = maxId + 1
 	end
-	MessageBarkerDB.factionrealm.nextId = newId + 1
+	self.db.factionrealm.nextId = newId + 1
 	return newId
 end
 
