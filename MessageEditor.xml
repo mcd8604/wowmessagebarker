@@ -51,7 +51,7 @@
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentNameFontString" x="7"/>
 				</Anchors>
-				<Size x="160" y="22"/>
+				<Size x="148" y="22"/>
 				<Scripts>
 					<OnTextChanged>
 						self:GetParent():OnNameChanged()
@@ -118,6 +118,33 @@
 					<OnEvent method="OnEvent"/>
 				</Scripts>
 			</ScrollFrame>
+			<Button name="$parentRemoveBindingButton" parentKey="RemoveBindingButton">
+				<Size x="32" y="32"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="$parentOutputSelectFrame" relativePoint="TOPLEFT" x="2" y="4"/>
+				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="9" right="7" top="-7" bottom="10"/>
+				</HitRectInsets>
+				<Scripts>
+					<OnClick>
+						local messageEditor = self:GetParent()
+						if messageEditor and messageEditor.keyBindings then
+							messageEditor:TriggerEvent(MessageEditorEvent.BindingChanged, messageEditor.currentMessage, nil)
+						end
+					</OnClick>
+					<OnEnter>
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText("Remove key binding");
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+				<NormalTexture file="Interface\Buttons\CancelButton-Up"/>
+				<PushedTexture file="Interface\Buttons\CancelButton-Down"/>
+				<HighlightTexture file="Interface\Buttons\CancelButton-Highlight" alphaMode="ADD"/>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad method="Load"/>

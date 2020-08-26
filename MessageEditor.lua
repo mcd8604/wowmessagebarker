@@ -56,7 +56,7 @@ function MessageEditorMixin:CreateBindingButton()
 	self.BindingButton:SetWidth(120)
 	self.BindingButton.selectedHighlight:SetWidth(120)
 	self.BindingButton:SetHeight(22);
-	self.BindingButton:SetPoint("TOPRIGHT", self.OutputSelectFrame, "TOPLEFT");
+	self.BindingButton:SetPoint("TOPRIGHT", self.RemoveBindingButton, "TOPLEFT", 10, -3);
 	self.BindingButton:Show();
 	self.KeyBindingFontString:SetPoint("RIGHT", self.BindingButton, "LEFT")
 end

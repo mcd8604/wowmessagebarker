@@ -85,14 +85,37 @@ StaticPopupDialogs["CONFIRM_OVERWRITE_KEYBINDING"] = {
 	showAlert = 1,
 };
 
-function MessageBarkerFrameMixin:HandleKeyBindingChange(message, key)
-	if self.MessageList.selectedMessage == message then
-		local action = GetBindingAction(key);
-		if action and action ~= '' then
-			StaticPopup_Show("CONFIRM_OVERWRITE_KEYBINDING", key, action, { messageBarkerFrame = self, key = key })
-		else
-			self:SetKeyBindingToSelectedRow(key)
+CONFIRM_REMOVE_KEYBINDING = "Remove key binding for message: '%s'?"
+StaticPopupDialogs["CONFIRM_REMOVE_KEYBINDING"] = {
+	text = CONFIRM_REMOVE_KEYBINDING,
+	button1 = OKAY,
+	button2 = CANCEL,
+	OnAccept = function(_, data)
+		local rowIndex, messageRow = data.messageBarkerFrame.MessageList:FindMessageRow(data.message.id)
+		if messageRow then
+			messageRow:RemoveKeyBindings()
 		end
+	end,
+	timeout = 0,
+	whileDead = 1,
+	showAlert = 1,
+};
+
+function MessageBarkerFrameMixin:HandleKeyBindingChange(message, key)
+	if key then
+		-- TODO ignore selectedMessage, just use the given one and find the send button for it
+		if self.MessageList.selectedMessage == message then
+			-- Add new key binding
+			local action = GetBindingAction(key);
+			if action and action ~= '' then
+				StaticPopup_Show("CONFIRM_OVERWRITE_KEYBINDING", key, action, { messageBarkerFrame = self, key = key })
+			else
+				self:SetKeyBindingToSelectedRow(key)
+			end
+		end
+	else
+		-- Remove key bindings
+		StaticPopup_Show("CONFIRM_REMOVE_KEYBINDING", message.name, '', { messageBarkerFrame = self, message = message })
 	end
 end
 
