@@ -49,7 +49,7 @@
 						<FontString name="$parentInstructionsText1" parentKey="InstructionsText1" inherits="GameFontNormal" text="Left-click the 'Add' button to create a Basic message.">
 							<Size y="22"/>
 							<Anchors>
-								<Anchor point="CENTER" y="33"/>
+								<Anchor point="TOP" y="-22"/>
 							</Anchors>
 						</FontString>
 						<FontString name="$parentInstructionsText2" parentKey="InstructionsText2" inherits="GameFontNormal" text="Right-click the 'Add' button to create different message types.">
@@ -62,6 +62,20 @@
 							<Size y="22"/>
 							<Anchors>
 								<Anchor point="TOP" relativeTo="$parentInstructionsText2" relativePoint="BOTTOM" />
+							</Anchors>
+						</FontString>
+						<FontString name="$parentInstructionsText4" parentKey="InstructionsText4" inherits="GameFontNormal" text="Select a message from the list to edit its name and contents, to choose which channels to send it to, and to set an optional key binding.">
+							<Size y="44"/>
+							<Anchors>
+								<Anchor point="LEFT" x="22"/>
+								<Anchor point="RIGHT" x="-22"/>
+								<Anchor point="CENTER"/>
+							</Anchors>
+						</FontString>
+						<FontString name="$parentInstructionsText5" parentKey="InstructionsText5" inherits="GameFontNormal" text="To send a message, either click its 'Send' Button or use a key binding if you configured one.">
+							<Size y="22"/>
+							<Anchors>
+								<Anchor point="BOTTOM" y="22"/>
 							</Anchors>
 						</FontString>
 					</Layer>
