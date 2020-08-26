@@ -5,7 +5,7 @@
 ## OptionalDeps: Ace3
 ## Version: 0.1
 ## SavedVariables: MessageBarkerDB
-## X-Curse-Project-ID: 
+## X-Curse-Project-ID: 404600
 
 Libs\embeds.xml
 MessageFactory.lua
