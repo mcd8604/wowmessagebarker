@@ -8,9 +8,9 @@ end
 
 function MessageBarkerFrameMixin:RegisterCallbacks()
 	MessageBarker:RegisterCallback(MessageBarkerEvent.Initialized, function(event) self:Initialize() end)
-	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageAdded, function(event, newMessage) self:MarkDirty("UpdateAll"); end)
+	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageAdded, function(event, newMessage) self:HandleMessageAdded(newMessage) end)
 	MessageBarker:RegisterCallback(MessageBarkerEvent.MessageDeleted, function(event, messageId) self.MessageList:DeleteMessageRow(messageId) end)
-	self.MessageList:RegisterCallback(MessageListEvent.RowSelected, function(event, message, keyBindings) self.MessageEditor:SetMessage(message, keyBindings) end)
+	self.MessageList:RegisterCallback(MessageListEvent.RowSelected, function(event, message, keyBindings) self:HandleMessageSelected(message, keyBindings) end)
 	self.MessageEditor:RegisterCallback(MessageEditorEvent.MessageChanged, function(event, message) self:MarkDirty("UpdateAll"); end)
 	self.MessageEditor:RegisterCallback(MessageEditorEvent.BindingChanged, function(event, message, key) self:HandleKeyBindingChange(message, key) end)
 	self:RegisterEvent("UPDATE_BINDINGS")
@@ -40,6 +40,20 @@ function MessageBarkerFrameMixin:MarkDirty(maskName)
 end
 
 function MessageBarkerFrameMixin:OnShow()
+end
+
+function MessageBarkerFrameMixin:HandleMessageAdded(newMessage)
+	self.MessageList:SetMessages(MessageBarker:GetMessages());
+	self.MessageList:SelectMessage(newMessage)
+end
+
+function MessageBarkerFrameMixin:HandleMessageSelected(message, keyBindings)
+	if message then
+		self.InstructionsFrame:Hide()
+	else
+		self.InstructionsFrame:Show()
+	end
+	self.MessageEditor:SetMessage(message, keyBindings)
 end
 
 function MessageBarkerFrameMixin:OnEvent(event, ...)

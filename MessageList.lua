@@ -65,7 +65,14 @@ function MessageListMixin:ResetMessageRowAnchors()
 end
 
 function MessageListMixin:SetSelectedRow(row)
-	if not self:IsSelectedRow(row) then
+	if self:IsSelectedRow(row) then
+		-- Deselect current selected row
+		row:SetHighlightAtlas("voicechat-channellist-row-highlight");
+		row:UnlockHighlight()
+		self.selectedRow = nil
+		self:TriggerEvent(MessageListEvent.RowSelected)
+	else
+		-- Select a new row
 		self:UnhighlightAllRows()
 		self.selectedRow = row
 		if self.selectedRow then
@@ -96,6 +103,17 @@ end
 
 function MessageListMixin:GetSelectedMessage()
 	return self.selectedMessage
+end
+
+function MessageListMixin:SelectMessage(message)
+	if message then
+		local rowIndex, messageRow = self:FindMessageRow(message.id)
+		if messageRow then
+			self:SetSelectedRow(messageRow)
+		end
+	else
+		self:SetSelectedRow()
+	end
 end
 
 function MessageListMixin:UpdateScrollBar()

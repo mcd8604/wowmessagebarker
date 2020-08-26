@@ -97,10 +97,12 @@ function MessageEditorMixin:SetMessageContentFrame()
 	for _, frame in ipairs(self.messageTypeFrames) do
 		frame:Hide()
 	end
-	local frame = self.messageTypeFrames[self.currentMessage.type]
-	assert(frame, "No frame exists for message type: "..self.currentMessageTypeString)
-	frame:SetMessage(self.currentMessage)
-	frame:Show()
+	if self.currentMessage and self.currentMessage.type then
+		local frame = self.messageTypeFrames[self.currentMessage.type]
+		assert(frame, "No frame exists for message type: "..self.currentMessageTypeString)
+		frame:SetMessage(self.currentMessage)
+		frame:Show()
+	end
 end
 
 --[[ function MessageEditorMixin:CancelMessageEdit()

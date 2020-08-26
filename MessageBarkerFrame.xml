@@ -39,6 +39,34 @@
 					<Anchor point="RIGHT" x="-7"/>
 				</Anchors>
 			</Frame>
+			<Frame name="$parentInstructionsFrame" parentKey="InstructionsFrame">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentMessageEditor"/>
+					<Anchor point="BOTTOMRIGHT" relativeTo="$parentMessageEditor"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="$parentInstructionsText1" parentKey="InstructionsText1" inherits="GameFontNormal" text="Left-click the 'Add' button to create a Basic message.">
+							<Size y="22"/>
+							<Anchors>
+								<Anchor point="CENTER" y="33"/>
+							</Anchors>
+						</FontString>
+						<FontString name="$parentInstructionsText2" parentKey="InstructionsText2" inherits="GameFontNormal" text="Right-click the 'Add' button to create different message types.">
+							<Size y="22"/>
+							<Anchors>
+								<Anchor point="TOP" relativeTo="$parentInstructionsText1" relativePoint="BOTTOM" />
+							</Anchors>
+						</FontString>
+						<FontString name="$parentInstructionsText3" parentKey="InstructionsText3" inherits="GameFontNormal" text="You can also drag-and-drop an item onto the 'Add' button.">
+							<Size y="22"/>
+							<Anchors>
+								<Anchor point="TOP" relativeTo="$parentInstructionsText2" relativePoint="BOTTOM" />
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
  			<Button name="$parentNewButton" parentKey="NewButton" inherits="UIPanelButtonTemplate" text="ADD" registerForClicks="LeftButtonUp,RightButtonUp">
 				<Size x="80" y="22"/>
 				<Anchors>
