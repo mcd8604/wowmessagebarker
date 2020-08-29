@@ -62,6 +62,7 @@ function MessageEditorMixin:CreateBindingButton()
 end
 
 function MessageEditorMixin:SetMessage(message, keyBindings)
+	self:ClearMessageContentFrame()
 	self.currentMessage = message
 	if self.currentMessage then
 		self.NameEditBox:SetText(self.currentMessage.name or '')
@@ -94,14 +95,18 @@ function MessageEditorMixin:ResetKeyBindingButton()
 end
 
 function MessageEditorMixin:SetMessageContentFrame()
-	for _, frame in ipairs(self.messageTypeFrames) do
-		frame:Hide()
-	end
 	if self.currentMessage and self.currentMessage.type then
-		local frame = self.messageTypeFrames[self.currentMessage.type]
-		assert(frame, "No frame exists for message type: "..self.currentMessageTypeString)
-		frame:SetMessage(self.currentMessage)
-		frame:Show()
+		self.messageContentFrame = self.messageTypeFrames[self.currentMessage.type]
+		assert(self.messageContentFrame, "No frame exists for message type: "..self.currentMessageTypeString)
+		self.messageContentFrame:SetMessage(self.currentMessage)
+		self.messageContentFrame:Show()
+	end
+end
+
+function MessageEditorMixin:ClearMessageContentFrame()
+	if self.messageContentFrame then
+		self.messageContentFrame:Hide()
+		self.messageContentFrame = nil
 	end
 end
 
@@ -123,4 +128,12 @@ end ]]
 function MessageEditorMixin:OnNameChanged()
 	self.currentMessage.name = self.NameEditBox:GetText()
 	self:TriggerEvent(MessageEditorEvent.MessageChanged, self.currentMessage)
+end
+
+function MessageEditorMixin:HandleItemLinked(item)
+	local handled = false
+	if self.messageContentFrame and self.messageContentFrame.HandleItemLinked then
+		handled = self.messageContentFrame:HandleItemLinked(item)
+	end
+	return handled
 end

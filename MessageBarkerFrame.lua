@@ -244,3 +244,32 @@ function MessageBarkerFrameMixin:DrawMinimapIcon()
 		end
 	}), MessageBarker.db.char.minimapButton);
 end
+
+-- Hook item clicks
+local originalHandleModifiedItemClick = nil
+if not originalHandleModifiedItemClick and HandleModifiedItemClick then
+	originalHandleModifiedItemClick = HandleModifiedItemClick
+	HandleModifiedItemClick = function(link)
+		local handled = false
+		if originalHandleModifiedItemClick then
+			handled = originalHandleModifiedItemClick(link)
+			if not handled then
+				handled = MessageBarkerFrame:HandleItemLinked(Item:CreateFromItemLink(link))
+			end
+		end
+		return handled
+	end
+end
+
+function MessageBarkerFrameMixin:HandleItemLinked(item)
+	local handled = false
+	if item and self:IsShown() and IsModifiedClick("CHATLINK") then
+		handled = self.MessageEditor:HandleItemLinked(item)
+		if not handled then
+			local newMessage = MessageBarker:CreateMessage(MessageBarker_MessageTypes.Sale, item:GetItemID(), item:GetItemLink())
+			MessageBarker:AddNewMessage(newMessage)
+			handled = true
+		end
+	end
+	return handled
+end

@@ -22,6 +22,15 @@ function SaleMessageTemplateMixin:DeleteItem(item)
 	self.SaleScrollFrame:Update()
 end
 
+function SaleMessageTemplateMixin:HandleItemLinked(item)
+	local handled = false
+	if item then
+		self:AddItem(item:GetItemID(), item:GetItemLink())
+		handled = true
+	end
+	return handled
+end
+
 SaleScrollFrameMixin = {}
 
 function SaleScrollFrameMixin:GetRowData(index)

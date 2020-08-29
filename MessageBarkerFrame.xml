@@ -46,24 +46,26 @@
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">
-						<FontString name="$parentInstructionsText1" parentKey="InstructionsText1" inherits="GameFontNormal" text="Left-click the 'Add' button to create a Basic message.">
-							<Size y="22"/>
+						<FontString name="$parentInstructionsText1" parentKey="InstructionsText1" inherits="GameFontNormal" text="Left-Click the 'Add' button to create a new message. Right-Click to choose a type. To create a Sale message, drag-and-drop an item onto the 'Add' button OR Shift-Click any item. While editing a message, Shift-Clicking an item will insert it instead of creating a new message.">
+							<Size y="66"/>
 							<Anchors>
-								<Anchor point="TOP" y="-22"/>
+								<Anchor point="LEFT" x="22"/>
+								<Anchor point="RIGHT" x="-22"/>
+								<Anchor point="TOP" y="0"/>
 							</Anchors>
 						</FontString>
-						<FontString name="$parentInstructionsText2" parentKey="InstructionsText2" inherits="GameFontNormal" text="Right-click the 'Add' button to create different message types.">
+						<!-- <FontString name="$parentInstructionsText2" parentKey="InstructionsText2" inherits="GameFontNormal" text="">
 							<Size y="22"/>
 							<Anchors>
 								<Anchor point="TOP" relativeTo="$parentInstructionsText1" relativePoint="BOTTOM" />
 							</Anchors>
 						</FontString>
-						<FontString name="$parentInstructionsText3" parentKey="InstructionsText3" inherits="GameFontNormal" text="You can also drag-and-drop an item onto the 'Add' button.">
+						<FontString name="$parentInstructionsText3" parentKey="InstructionsText3" inherits="GameFontNormal" text="">
 							<Size y="22"/>
 							<Anchors>
 								<Anchor point="TOP" relativeTo="$parentInstructionsText2" relativePoint="BOTTOM" />
 							</Anchors>
-						</FontString>
+						</FontString> -->
 						<FontString name="$parentInstructionsText4" parentKey="InstructionsText4" inherits="GameFontNormal" text="Select a message from the list to edit its name and contents, to choose which channels to send it to, and to set an optional key binding.">
 							<Size y="44"/>
 							<Anchors>
