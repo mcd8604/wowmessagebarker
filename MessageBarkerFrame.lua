@@ -123,7 +123,7 @@ function MessageBarkerFrameMixin:SetKeyBindingToSelectedRow(key)
 	local buttonName = self.MessageList.selectedRow.RunButton:GetName()
 	local ok = SetBindingClick(key, buttonName);
 	if ok then
-		AttemptToSaveBindings(GetCurrentBindingSet())
+		SaveBindings(GetCurrentBindingSet())
 	else
 		self.MessageEditor:ResetKeyBindingButton()
 	end
