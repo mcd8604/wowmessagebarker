@@ -38,7 +38,15 @@ function MessageRowMixin:RemoveKeyBindings()
 		for i = 1, select('#', ...) do
 			local ok = SetBinding(select(i, ...))
 			if ok then
+				--@version-retail@ 
 				SaveBindings(GetCurrentBindingSet())
+				--@end-version-retail@
+				--@version-bc@ 
+				SaveBindings(GetCurrentBindingSet())
+				--@end-version-bc@
+				--@version-classic@ 
+				AttemptToSaveBindings(GetCurrentBindingSet())
+				--@end-version-classic@
 			end
 		end 
 	end

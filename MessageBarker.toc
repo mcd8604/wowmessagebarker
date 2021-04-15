@@ -1,4 +1,4 @@
-## Interface-Retail: 90005
+## Interface-Retail: 90010
 ## Interface-Classic: 11306
 ## Interface-BC: 20501
 ## Title: MessageBarker
@@ -11,6 +11,9 @@
 
 Libs\embeds.xml
 MessageFactory.lua
+#@version-bc@
+CallbackRegistryBaseMixin.lua
+#@end-version-bc@
 MessageBarker.lua
 MessageRow.xml
 MessageList.xml
