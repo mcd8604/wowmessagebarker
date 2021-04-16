@@ -20,7 +20,7 @@ function MessageListMixin:SetMessages(messages)
 			self:HighlightRow(self.selectedRow)
 		end
 	end
-	table.sort(self.messageRows, function(a, b) return a.message.id < b.message.id end)
+	table.sort(self.messageRows, function(a, b) return a.message.name < b.message.name end)
 	self:ResetMessageRowAnchors()
 	self:UpdateScrollBar();
 end
