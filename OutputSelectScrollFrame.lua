@@ -1,8 +1,12 @@
-OutputSelectScrollFrameMixin = CreateFromMixins(EventRegistrationHelper);
+OutputSelectScrollFrameMixin = {}
+
+local dynamicEvents = {
+	"CHANNEL_UI_UPDATE",
+	"CHANNEL_LEFT",
+};
 
 function OutputSelectScrollFrameMixin:OnLoad()
 	ItemListScrollFrameMixin.OnLoad(self)
-	self:AddEvent("CHANNEL_UI_UPDATE")
 end
 
 function OutputSelectScrollFrameMixin:OnEvent(event, ...)
@@ -135,9 +139,9 @@ function OutputSelectScrollFrameMixin:EnsureMessageOutputs()
 end
 
 function OutputSelectScrollFrameMixin:OnShow()
-	self:SetEventsRegistered(true);
+	FrameUtil.RegisterFrameForEvents(self, dynamicEvents);
 end
 
 function OutputSelectScrollFrameMixin:OnHide()
-	self:SetEventsRegistered(false);
+	FrameUtil.UnregisterFrameForEvents(self, dynamicEvents);
 end
