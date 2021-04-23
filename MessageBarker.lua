@@ -34,8 +34,15 @@ function MessageBarker:BarkMessage(messageId, testOutput)
 			for _, output in pairs(message.outputs) do
 				if testOutput then
 					self:TestMessageOutput(message, output)
-				else
-					SendChatMessage(self:GenerateText(message), output.chatType, nil, self:LookupChannelID(output.channel) or 0)
+				else					
+					if output.chatType == "CHANNEL" then
+						local channelId = self:LookupChannelID(output.channel) or 0
+						if channelId > 0 then
+							SendChatMessage(self:GenerateText(message), output.chatType, nil, channelId)
+						end
+					else
+						SendChatMessage(self:GenerateText(message), output.chatType)
+					end
 				end
 			end
 		end
