@@ -1,6 +1,7 @@
-## Interface-Retail: 90010
-## Interface-Classic: 11307
-## Interface-BC: 20501
+## Interface: 100107
+## Interface-Classic: 11404
+## Interface-BCC: 20504
+## Interface-Wrath: 30403
 ## Title: MessageBarker
 ## Notes: Addon for creating, storing, and sending chat messages to multiple channels at once. Supports item linking and configurable key binding.
 ## Author: Maurty
@@ -11,12 +12,7 @@
 
 Libs\embeds.xml
 MessageFactory.lua
-#@version-bc@
 CallbackRegistryBaseMixin.lua
-#@end-version-bc@
-#@version-retail@
-CallbackRegistryBaseMixin.lua
-#@end-version-retail@
 MessageBarker.lua
 MessageRow.xml
 MessageList.xml
