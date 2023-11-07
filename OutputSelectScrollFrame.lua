@@ -65,11 +65,14 @@ end
 function OutputSelectScrollFrameMixin:GetDefaultChatOutputs()
 	return {
 		{ chatType = "SAY", 			display = SAY },
+		{ chatType = "EMOTE", 			display = EMOTE },
 		{ chatType = "YELL", 			display = YELL },
+		{ chatType = "PARTY", 			display = PARTY },
 		{ chatType = "RAID", 			display = RAID },
 		{ chatType = "RAID_WARNING", 	display = RAID_WARNING },
 		{ chatType = "INSTANCE_CHAT", 	display = INSTANCE_CHAT },
 		{ chatType = "GUILD", 			display = GUILD },
+		{ chatType = "OFFICER", 		display = OFFICER },
 	}
 end
 
