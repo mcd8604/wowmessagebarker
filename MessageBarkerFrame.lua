@@ -253,7 +253,7 @@ if not originalHandleModifiedItemClick and HandleModifiedItemClick then
 		local handled = false
 		if originalHandleModifiedItemClick then
 			handled = originalHandleModifiedItemClick(link)
-			if not handled then
+			if not handled and type(link) == "string" then
 				handled = MessageBarkerFrame:HandleItemLinked(Item:CreateFromItemLink(link))
 			end
 		end
