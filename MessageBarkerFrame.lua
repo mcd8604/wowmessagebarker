@@ -17,7 +17,6 @@ function MessageBarkerFrameMixin:RegisterCallbacks()
 end
 
 function MessageBarkerFrameMixin:Initialize()
-	self:DrawMinimapIcon();
 	self.MessageList:SetMessages(MessageBarker:GetMessages());
 end
 
@@ -224,25 +223,6 @@ function MessageBarkerFrameMixin:PromptDeleteSelectedMessage()
 	local selectedMessage = self.MessageList:GetSelectedMessage()
 	local messageRow = self.MessageList.selectedRow
 	StaticPopup_Show("CONFIRM_DELETE_MESSAGE", selectedMessage.name, nil, { messageRow = messageRow, messageToDelete = selectedMessage })
-end
-
--- Minimap icon
-function MessageBarkerFrameMixin:DrawMinimapIcon()
-	LibStub("LibDBIcon-1.0"):Register("MessageBarkerFrame", LibStub("LibDataBroker-1.1"):NewDataObject("MessageBarkerFrame",
-	{
-		type = "data source",
-		text = "Message Barker",
-		icon = "Interface\\Icons\\Ability_mount_whitedirewolf",
-		OnClick = function(self, button) 
-			--if (button == "RightButton") then
-			--elseif (button == "MiddleButton") then
-			MessageBarkerFrame:Toggle();
-		end,
-		OnTooltipShow = function(tooltip)
-			tooltip:AddLine(format("%s", "Message Barker"));
-			tooltip:AddLine("|cFFCFCFCFLeft Click: |rOpen Message Barker");
-		end
-	}), MessageBarker.db.char.minimapButton);
 end
 
 -- Hook item clicks

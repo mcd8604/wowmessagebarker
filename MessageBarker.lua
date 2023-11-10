@@ -7,12 +7,6 @@ MessageBarkerEvent = {
 	MessageDeleted = 3,	
 }
 
--- Slash Commands
-SLASH_MESSAGEBARKER1, SLASH_MESSAGEBARKER2, SLASH_MESSAGEBARKER3 = "/bm", "/barkmsg", "/barkmessage"
-SlashCmdList.MESSAGEBARKER = function(msg, editBox)
-	MessageBarker:BarkMessage(msg, MessageBarker.db.char.testOutputMode or false)
-end
-
 function MessageBarker:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("MessageBarkerDB", {
 		factionrealm = self:GetDefaultFactionRealmDB(),
@@ -21,18 +15,16 @@ function MessageBarker:OnInitialize()
 			testOutputMode = false
 		}
 	}, true)
+	MessageBarkerCommands:InitMinimapIcon();
 	self:TriggerEvent(MessageBarkerEvent.Initialized)
 end
 
-function MessageBarker:BarkMessage(messageId, testOutput)
+function MessageBarker:BarkMessage(messageId)
 	if messageId then
-		if testOutput == nil then
-			testOutput = self.db.char.testOutputMode
-		end
 		local message = self:GetMessageById(messageId)
 		if message and message.outputs then
 			for _, output in pairs(message.outputs) do
-				if testOutput then
+				if self.db.char.testOutputMode then
 					self:TestMessageOutput(message, output)
 				else					
 					if output.chatType == "CHANNEL" then
