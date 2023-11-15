@@ -22,11 +22,17 @@ function SaleMessageTemplateMixin:DeleteItem(item)
 	self.SaleScrollFrame:Update()
 end
 
-function SaleMessageTemplateMixin:HandleItemLinked(item)
+function SaleMessageTemplateMixin:HandleInsertLink(link)
 	local handled = false
-	if item then
-		self:AddItem(item:GetItemID(), item:GetItemLink())
-		handled = true
+	if link and type(link) == "string" then
+		local item = Item:CreateFromItemLink(link)
+		if item then
+			local itemId = item:GetItemID()
+			if itemId and itemId > 0 then
+				self:AddItem(itemId, item:GetItemLink())
+				handled = true
+			end
+		end
 	end
 	return handled
 end

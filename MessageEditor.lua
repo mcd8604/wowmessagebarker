@@ -130,10 +130,30 @@ function MessageEditorMixin:OnNameChanged()
 	self:TriggerEvent(MessageEditorEvent.MessageChanged, self.currentMessage)
 end
 
-function MessageEditorMixin:HandleItemLinked(item)
+function MessageEditorMixin:HandleInsertLink(link)
 	local handled = false
-	if self.messageContentFrame and self.messageContentFrame.HandleItemLinked then
-		handled = self.messageContentFrame:HandleItemLinked(item)
+	if self.messageContentFrame then
+		if self.messageContentFrame.HandleInsertLink then
+			handled = self.messageContentFrame:HandleInsertLink(link)
+		end
+	else
+		handled = self:TryCreateNewSaleMessageFromLink(link)
+	end
+	return handled
+end
+
+function MessageEditorMixin:TryCreateNewSaleMessageFromLink(link)
+	local handled = false
+	if link and type(link) == "string" then
+		local item = Item:CreateFromItemLink(link)
+		if item then
+			local itemId = item:GetItemID()
+			if itemId and itemId > 0 then
+				local newMessage = MessageBarker:CreateMessage(MessageBarker_MessageTypes.Sale, itemId, item:GetItemLink())
+				MessageBarker:AddNewMessage(newMessage)
+				handled = true
+			end
+		end
 	end
 	return handled
 end

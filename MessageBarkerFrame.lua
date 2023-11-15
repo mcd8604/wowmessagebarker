@@ -225,31 +225,22 @@ function MessageBarkerFrameMixin:PromptDeleteSelectedMessage()
 	StaticPopup_Show("CONFIRM_DELETE_MESSAGE", selectedMessage.name, nil, { messageRow = messageRow, messageToDelete = selectedMessage })
 end
 
--- Hook item clicks
-local originalHandleModifiedItemClick = nil
-if not originalHandleModifiedItemClick and HandleModifiedItemClick then
-	originalHandleModifiedItemClick = HandleModifiedItemClick
-	HandleModifiedItemClick = function(link)
+-- Hook ChatEdit_InsertLink
+local originalChatEdit_InsertLink = nil
+if not originalChatEdit_InsertLink and ChatEdit_InsertLink then
+	originalChatEdit_InsertLink = ChatEdit_InsertLink
+	ChatEdit_InsertLink = function(link)
 		local handled = false
-		if originalHandleModifiedItemClick then
-			handled = originalHandleModifiedItemClick(link)
-			if not handled and type(link) == "string" then
-				handled = MessageBarkerFrame:HandleItemLinked(Item:CreateFromItemLink(link))
+		-- Try handling in the MessageEditor
+		if link and MessageBarkerFrame:IsShown() and MessageBarkerFrame.MessageEditor then
+			handled = MessageBarkerFrame.MessageEditor:HandleInsertLink(link)
+		end
+		-- Fall back to original handler
+		if not handled then
+			if originalChatEdit_InsertLink then
+				handled = originalChatEdit_InsertLink(link)
 			end
 		end
 		return handled
 	end
-end
-
-function MessageBarkerFrameMixin:HandleItemLinked(item)
-	local handled = false
-	if item and self:IsShown() and IsModifiedClick("CHATLINK") then
-		handled = self.MessageEditor:HandleItemLinked(item)
-		if not handled then
-			local newMessage = MessageBarker:CreateMessage(MessageBarker_MessageTypes.Sale, item:GetItemID(), item:GetItemLink())
-			MessageBarker:AddNewMessage(newMessage)
-			handled = true
-		end
-	end
-	return handled
 end

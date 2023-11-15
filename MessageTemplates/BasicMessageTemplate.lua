@@ -14,10 +14,10 @@ function BasicMessageTemplateMixin:OnTextChanged()
 	self.message.content = self.MessageScrollFrame.MessageEditBox:GetText()
 end
 
-function BasicMessageTemplateMixin:HandleItemLinked(item)
+function BasicMessageTemplateMixin:HandleInsertLink(link)
 	local handled = false
-	if item then
-		self.MessageScrollFrame.MessageEditBox:Insert(item:GetItemLink())
+	if link then
+		self.MessageScrollFrame.MessageEditBox:Insert(link)
 		handled = true
 	end
 	return handled
