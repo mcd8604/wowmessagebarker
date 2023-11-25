@@ -46,7 +46,7 @@
 				</Anchors>
 				<Layers>
 					<Layer level="OVERLAY">
-						<FontString name="$parentInstructionsText1" parentKey="InstructionsText1" inherits="GameFontNormal" text="Left-Click the 'Add' button to create a new message. Right-Click to choose a type. To create a Sale message, drag-and-drop an item onto the 'Add' button OR Shift-Click any item. While editing a message, Shift-Clicking an item will insert it instead of creating a new message.">
+						<FontString name="$parentInstructionsText1" parentKey="InstructionsText1" inherits="GameFontNormal" text="Left-Click the 'Add' button to create a new 'Basic' type message. Right-Click to create a specific type of message. You can also create a 'Sale' message if you drag-and-drop an item onto the 'Add' button OR Shift-Click any item.">
 							<Size y="66"/>
 							<Anchors>
 								<Anchor point="LEFT" x="22"/>
@@ -66,7 +66,7 @@
 								<Anchor point="TOP" relativeTo="$parentInstructionsText2" relativePoint="BOTTOM" />
 							</Anchors>
 						</FontString> -->
-						<FontString name="$parentInstructionsText4" parentKey="InstructionsText4" inherits="GameFontNormal" text="Select a message from the list to edit its name and contents, to choose which channels to send it to, and to set an optional key binding.">
+						<FontString name="$parentInstructionsText4" parentKey="InstructionsText4" inherits="GameFontNormal" text="Select a message from the list to edit its name and contents, choose which channels to send it to, and set an optional key binding. While editing a message, Shift-Clicking any item or link will insert it.">
 							<Size y="44"/>
 							<Anchors>
 								<Anchor point="LEFT" x="22"/>
@@ -74,7 +74,7 @@
 								<Anchor point="CENTER"/>
 							</Anchors>
 						</FontString>
-						<FontString name="$parentInstructionsText5" parentKey="InstructionsText5" inherits="GameFontNormal" text="To send a message, either click its 'Send' Button or use a key binding if you configured one.">
+						<FontString name="$parentInstructionsText5" parentKey="InstructionsText5" inherits="GameFontNormal" text="To send a message, either click its 'Send' Button or use its key binding.">
 							<Size y="22"/>
 							<Anchors>
 								<Anchor point="BOTTOM" y="22"/>
