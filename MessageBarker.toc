@@ -1,7 +1,6 @@
-## Interface: 100200
-## Interface-Classic: 11503
-## Interface-BCC: 20504
-## Interface-Wrath: 30403
+## Interface: 110002
+## Interface-Classic: 11504
+## Interface-Cataclysm: 40400
 ## Title: MessageBarker
 ## Notes: Addon for creating, storing, and sending chat messages to multiple channels at once. Supports item linking and configurable key binding.
 ## Author: Maurty
