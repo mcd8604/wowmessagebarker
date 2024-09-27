@@ -231,14 +231,13 @@ if not originalChatEdit_InsertLink and ChatEdit_InsertLink then
 	originalChatEdit_InsertLink = ChatEdit_InsertLink
 	ChatEdit_InsertLink = function(link)
 		local handled = false
-		-- Try handling in the MessageEditor
-		if link and MessageBarkerFrame:IsShown() and MessageBarkerFrame.MessageEditor then
-			handled = MessageBarkerFrame.MessageEditor:HandleInsertLink(link)
+		if originalChatEdit_InsertLink then
+			handled = originalChatEdit_InsertLink(link)
 		end
-		-- Fall back to original handler
 		if not handled then
-			if originalChatEdit_InsertLink then
-				handled = originalChatEdit_InsertLink(link)
+			-- Try handling in the MessageEditor
+			if link and MessageBarkerFrame:IsShown() and MessageBarkerFrame.MessageEditor then
+				handled = MessageBarkerFrame.MessageEditor:HandleInsertLink(link)
 			end
 		end
 		return handled
