@@ -225,21 +225,8 @@ function MessageBarkerFrameMixin:PromptDeleteSelectedMessage()
 	StaticPopup_Show("CONFIRM_DELETE_MESSAGE", selectedMessage.name, nil, { messageRow = messageRow, messageToDelete = selectedMessage })
 end
 
--- Hook ChatEdit_InsertLink
-local originalChatEdit_InsertLink = nil
-if not originalChatEdit_InsertLink and ChatEdit_InsertLink then
-	originalChatEdit_InsertLink = ChatEdit_InsertLink
-	ChatEdit_InsertLink = function(link)
-		local handled = false
-		if originalChatEdit_InsertLink then
-			handled = originalChatEdit_InsertLink(link)
-		end
-		if not handled then
-			-- Try handling in the MessageEditor
-			if link and MessageBarkerFrame:IsShown() and MessageBarkerFrame.MessageEditor then
-				handled = MessageBarkerFrame.MessageEditor:HandleInsertLink(link)
-			end
-		end
-		return handled
+hooksecurefunc("HandleModifiedItemClick", function(link)
+	if link and MessageBarkerFrame:IsShown() and MessageBarkerFrame.MessageEditor then
+		MessageBarkerFrame.MessageEditor:HandleInsertLink(link)
 	end
-end
+end)
