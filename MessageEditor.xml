@@ -27,12 +27,12 @@
 	<Frame name="MessageEditorTemplate" mixin="MessageEditorMixin" virtual="true">
 		<Layers>
 			<Layer level="BORDER">
-				<FontString name="$parentNameFontString" parentKey="NameFontString" inherits="GameFontNormalLeft" text="Name:">
+				<FontString name="$parentNameFontString" parentKey="NameFontString" inherits="GameFontNormal" justifyH="LEFT" text="Name:">
 					<Anchors>
 						<Anchor point="TOPLEFT" x="4" y="-4"/>
 					</Anchors>
 				</FontString>
-				<!-- <FontString name="$parentMessageTypeFontStringHeader" parentKey="MessageTypeFontStringHeader" inherits="GameFontNormalLeft" text="Type:">
+				<!-- <FontString name="$parentMessageTypeFontStringHeader" parentKey="MessageTypeFontStringHeader" inherits="GameFontNormal" justifyH="LEFT" text="Type:">
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="LEFT" relativeTo="$parentNameFontString" y="-22"/>
 					</Anchors>
@@ -42,7 +42,7 @@
 						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentMessageTypeFontStringHeader"/>
 					</Anchors>
 				</FontString> -->
-				<FontString name="$parentKeyBindingFontString" parentKey="KeyBindingFontString" inherits="GameFontNormalRight" text="Binding:">
+				<FontString name="$parentKeyBindingFontString" parentKey="KeyBindingFontString" inherits="GameFontNormal" justifyH="RIGHT" text="Binding:">
 				</FontString>
 			</Layer>
 		</Layers>
